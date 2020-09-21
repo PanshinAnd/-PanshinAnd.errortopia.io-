@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Тестовое</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js"></script>
+    </style>
+  </head>
+  <body>
+    <div class="strict">
+      <!--В этом div я буду строго следовать заданию -->
+      <div class="stat">
+        <table>
+          <tr>
+            <td>Жители</td>
+            <td>Деньги</td>
+            <td>Еда</td>
+            <td>Фермы</td>
+            <td>Банки</td>
+            <td>Рабочие места</td>
+            <td>Текущий ход </td>
+          </tr>
+          <tr>
+            <td id="population"></td>
+            <td id='money'></td>
+            <td id='food'></td>
+            <td id='farm'></td>
+            <td id='bank'></td>
+            <td id="workplaces"></td>
+            <td id='currentTurn'></td>
+          </tr>
+        </table>
+      </div>
+      <div class='container'>
+        <form action="main.js" name ="form">
+          <p>Введите в форму ниже текущий ход и количество ферм, которые вы строите.</p>
+          <!--в связи с этим вопрос: зачем вводить текущий ход, если он ни на что не влияет? -->
+          <input type='number' id='farm' name="farm" value="farm"></input>
+          <input type="button" onclick="building(farm)" value= "Построить ферму"></input>
+          <div class="break"></div>
+          <input type='number' id='bank' name="bank" value="bank"></input>
+          <input type="button" onclick="building(bank)" value= "Построить банк"></input>
+          <div class="break"></div>
+          <input type="button" onclick="updateStat()" value = 'Обновить данные'></input>
+          <input type="button" onclick="nextTurn()" value = 'Следующий ход'></input>
+        </form>
+      </div>
+    </div>
+    <div class="update">
+      <!--В этом div я модифицирую задание, чтобы использовать все указанные в нем понятия -->
+    </div>
+  </body>
+</html>
