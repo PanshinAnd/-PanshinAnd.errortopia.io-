@@ -7,7 +7,7 @@ table {
   border-color: red;
   margin-left: auto;
   margin-right: auto;
-  width:40em;
+  width:50em;
 }
 .break {
   flex-basis: 100%;

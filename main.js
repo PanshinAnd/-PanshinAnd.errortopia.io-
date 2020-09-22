@@ -13,8 +13,8 @@ class Building {
   }
 }
 
-let farm = new Building("food", 70, 25, 0);
-let bank = new Building("money", 25, 20, 0);
+let farm = new Building("food", 0.7, 25, 0);
+let bank = new Building("money", 0.25, 20, 0);
 
 const populationGrowth = 0.02;
 let population = 100;
@@ -26,24 +26,36 @@ let balanceFood, balanceMoney, balancePopulation = 0;
 
 function balanceAccrual(){
   balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income();
-  balanceFood = food - population + farm.income();
-  if (population > workplaces)
+  if (population > sumWorkplaces()){
     balanceMoney += population-sumWorkplaces() + bank.income();
-  balancePopulation = population * populationGrowth - population;
-  //Если еды с учетом прироста не хватает на население с учетом прироста, то
+  }
+  balanceFood = Math.floor(farm.income() - population);
+  balancePopulation = Math.floor(population * populationGrowth);
+  if(food == 0){
+    balancePopulation = 0;
+  }
+  //Если прирост еды положительный, и
+  //Еды с учетом прироста не хватает на население с учетом прироста, то
   //баланс населения равен разнице между едой (с уч.прироста) и популяцией (с уч.прироста)
-  if ((food+balanceFood) < (population + balancePopulation){
-    balancePopulation = (food + balanceFood) - (population - balancePopulation);
+  if (balanceFood >= 0 && (food+balanceFood) < (population + balancePopulation) && (farm.income() < population)){
+    balancePopulation = (food + balanceFood) - (population + balancePopulation);
   }
 }
 
 function buildEfficiency(){
+  let td;
+  let result;
+  td = document.getElementById("buildEfficiency");
   if (sumWorkplaces() <= population){
-      return 1;
+    result = 100;
+    td.innerHTML = result;
+      return result;
   }
  else{
     let result = population / sumWorkplaces();
+    result = result * 100;
     result = result.toFixed(2);
+    td.innerHTML = result;
     return result;
   }
 }
@@ -101,6 +113,13 @@ function nextTurn() {
   money += balanceMoney;
   food += balanceFood;
   population += balancePopulation;
+
+  if(food < 0){
+    population += food;
+    food = 0;
+  }
+
+
   currentTurn ++;
   updateStat();
 }
