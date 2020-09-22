@@ -1,19 +1,3 @@
-let population = 100;
-let money = 400;
-let food = 130;
-let populationGrowth = 0.02;
-let currentTurn = 0;
-
-function buildEfficiency(){
-  if (sumWorkplaces() <= population){
-      return 1;
-  }
- else{
-    let result = population / sumWorkplaces();
-    result = result.toFixed(2);
-    return result;
-  }
-}
 class Building {
   constructor(typeRes, countRes, countWorkplaces, countBuildings) {
     this.typeRes = typeRes;
@@ -32,13 +16,52 @@ class Building {
 let farm = new Building("food", 70, 25, 0);
 let bank = new Building("money", 25, 20, 0);
 
+const populationGrowth = 0.02;
+let population = 100;
+let money = 400;
+let food = 130;
+let currentTurn = 0;
+let balanceFood, balanceMoney, balancePopulation = 0;
+
+
+function balanceAccrual(){
+  balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income();
+  balanceFood = food - population + farm.income();
+  if (population > workplaces)
+    balanceMoney += population-sumWorkplaces() + bank.income();
+  balancePopulation = population * populationGrowth - population;
+  //Если еды с учетом прироста не хватает на население с учетом прироста, то
+  //баланс населения равен разнице между едой (с уч.прироста) и популяцией (с уч.прироста)
+  if ((food+balanceFood) < (population + balancePopulation){
+    balancePopulation = (food + balanceFood) - (population - balancePopulation);
+  }
+}
+
+function buildEfficiency(){
+  if (sumWorkplaces() <= population){
+      return 1;
+  }
+ else{
+    let result = population / sumWorkplaces();
+    result = result.toFixed(2);
+    return result;
+  }
+}
 function sumWorkplaces(){
   return farm.totalWorkplaces() + bank.totalWorkplaces();
 }
 function updateStat(){
   let td;
+  balanceAccrual();
     td = document.getElementById("population");
     td.innerHTML = population;
+    if(balancePopulation >= 0){
+      td.innerHTML += " + ";
+      td.innerHTML += balancePopulation;
+    }
+    else{
+      td.innerHTML += balancePopulation;
+    }
 
     td = document.getElementById('farm');
     td.innerHTML = farm.countBuildings;
@@ -48,9 +71,23 @@ function updateStat(){
 
     td = document.getElementById('money');
     td.innerHTML = money;
+    if(balanceMoney >= 0){
+      td.innerHTML +=  ' + ';
+      td.innerHTML += balanceMoney;
+    }
+    else{
+      td.innerHTML += balanceMoney;
+    }
 
     td = document.getElementById('food');
     td.innerHTML = food;
+    if(balanceFood >= 0){
+      td.innerHTML += ' + ';
+      td.innerHTML += balanceFood;
+    }
+    else {
+      td.innerHTML += balanceFood;
+    }
 
     td = document.getElementById('workplaces');
     td.innerHTML = sumWorkplaces();
@@ -58,147 +95,22 @@ function updateStat(){
     td = document.getElementById('currentTurn');
     td.innerHTML = currentTurn;
 
-    nextTurnViewStat();
 }
-function nextTurnViewStat() {
-  let td, balancePopulation, balanceMoney, balanceFood;
-  populationGrowth = 0.02
-/*
-  if(population <= food){
-    balancePopulation = Math.floor(population * populationGrowth);
-    if(balancePopulation < 1)
-      balancePopulation = 1;
-  }
-  else {
-    balancePopulation = food - population;
-  }
-  balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income();
-  if (population > workplaces)
-    balanceMoney += population-sumWorkplaces() + bank.income();
-  balanceFood = Math.floor(farm.income() - population);
-
-*/
-
-  // Начисляю ресурсы
-  balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income();
-  if (population > workplaces)
-    balanceMoney += population-sumWorkplaces() + bank.income();
-
-  balanceFood = farm.income();
-
-  balancePopulation = Math.floor(population * populationGrowth) - population;
-  if (balancePopulation < 1){
-    balancePopulation = 1;
-  }
-
-  //Расходую ресурсы
-  balanceFood = balanceFood - population;
-  if (balanceFood < 0){
-    balancePopulation = population - balanceFood;
-    balanceFood = 0;
-  }
-
-
-  if(balancePopulation >= 0){
-    td = document.getElementById("population");
-    td.innerHTML += ' + ';
-    td.innerHTML += balancePopulation;
-  }
-  else{
-    td = document.getElementById("population");
-    td.innerHTML += balancePopulation;
-  }
-  if(balanceMoney >= 0)
-  {
-    td = document.getElementById('money');
-    td.innerHTML +=  ' + ';
-    td.innerHTML += balanceMoney;
-  }
-  else{
-    td = document.getElementById('money');
-    td.innerHTML += balanceMoney;
-  }
-  if(balanceFood >= 0){
-    td = document.getElementById('food');
-    td.innerHTML += ' + ';
-    td.innerHTML += balanceFood;
-  }
-  else{
-    td = document.getElementById('food')
-    td.innerHTML += balanceFood;
-  }
-}
-
-function nextTurn(){
-  populationGrowth = 0.02;
-  /*if(food < population)
-    populationGrowth = 0;
-  population += Math.floor(population * populationGrowth);
-  foodchange = food + Math.floor(farm.income() - population);
-  food = foodchange;
-  if(foodchange < 0){
-    population += foodchange;
-    food = 0;
-  }
-  money += Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income(); //работающий житель = 3 монеты, неработающий = 1 монета
-  if (population > sumWorkplaces())
-    money += Math.floor(population-sumWorkplaces());
-*/
-
-  //Начисляю ресурсы
-  balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income();
-  if (population > workplaces)
-    balanceMoney += population-sumWorkplaces() + bank.income();
+function nextTurn() {
+  //вычисляю баланс ресурсов
   money += balanceMoney;
-
-  food += farm.income();
-
-  balancePopulation = Math.floor(population * populationGrowth);
-  if (balancePopulation < 1){
-    balancePopulation = 1;
-  }
-
-  //Расходую ресурсы
-food -= population;
-if (food < 0){
-  population -= Math.abs(food) - populationGrowth;
-  food = 0;
-}
-
-/*
-
-    if(population <= food){
-      balancePopulation = Math.floor(population * populationGrowth);
-      if (balancePopulation < 1){
-        balancePopulation = 1;
-      }
-    }
-    else {
-      balancePopulation = food - population;
-    }
-    balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income();
-    if (population > workplaces)
-      balanceMoney += population-sumWorkplaces() + bank.income();
-    balanceFood = Math.floor(farm.income() - population);
-  */
-
-  population += Math.floor(balancePopulation);
-  workplaces = Math.floor(farm.totalWorkplaces() + bank.totalWorkplaces());
-
+  food += balanceFood;
+  population += balancePopulation;
   currentTurn ++;
   updateStat();
 }
-//Функция должна считать данные с форм ввода (фермы и банки) и построить соответствующее количество зданий каждого типа
+
 function  building(build){
   countBuildings = build.value;
-  //alert(count); //1
-  //alert(build.name); //bank
   buildName = build.name;
   if (money >= 100){
     let input = document.getElementById(buildName).value;
-    //alert(input);
     let countBuildings = Number(build.value);
-    //alert(countBuildings);
     if (countBuildings >= 1){
       while(money >= 100 && countBuildings >= 1){
         eval(buildName).countBuildings++;
@@ -210,6 +122,9 @@ function  building(build){
       alert("Вы хотите возвести больше построек, чем можете себе позволить. Постройки возведены на все ваши деньги");
     }
     updateStat();
+  }
+  else{
+    alert("Недостаточно денег для постройки");
   }
 }
 window.onload = function() {
