@@ -131,7 +131,7 @@ function nextTurnViewStat() {
 
 function nextTurn(){
   populationGrowth = 0.02;
-  if(food < population)
+  /*if(food < population)
     populationGrowth = 0;
   population += Math.floor(population * populationGrowth);
   foodchange = food + Math.floor(farm.income() - population);
@@ -143,6 +143,29 @@ function nextTurn(){
   money += Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income(); //работающий житель = 3 монеты, неработающий = 1 монета
   if (population > sumWorkplaces())
     money += Math.floor(population-sumWorkplaces());
+*/
+
+  //Начисляю ресурсы
+  balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income();
+  if (population > workplaces)
+    balanceMoney += population-sumWorkplaces() + bank.income();
+  money += balanceMoney;
+
+  food += farm.income();
+
+  balancePopulation = Math.floor(population * populationGrowth);
+  if (balancePopulation < 1){
+    balancePopulation = 1;
+  }
+
+  //Расходую ресурсы
+food -= population;
+if (food < 0){
+  population -= Math.abs(food) - populationGrowth;
+  food = 0;
+}
+
+/*
 
     if(population <= food){
       balancePopulation = Math.floor(population * populationGrowth);
@@ -157,9 +180,8 @@ function nextTurn(){
     if (population > workplaces)
       balanceMoney += population-sumWorkplaces() + bank.income();
     balanceFood = Math.floor(farm.income() - population);
+  */
 
-  food += balanceFood;
-  money += balanceMoney;
   population += Math.floor(balancePopulation);
   workplaces = Math.floor(farm.totalWorkplaces() + bank.totalWorkplaces());
 
