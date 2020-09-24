@@ -25,7 +25,7 @@ let balanceFood, balanceMoney, balancePopulation = 0;
 
 
 function balanceAccrual(){
-  balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3) + bank.income();
+  balanceMoney = Math.floor(Math.min(population,sumWorkplaces()) * 3 + bank.income());
   if (population > sumWorkplaces()){
     balanceMoney += Math.floor(population-sumWorkplaces());
   }
@@ -110,7 +110,7 @@ function updateStat(){
 }
 function nextTurn() {
   //вычисляю баланс ресурсов
-  money += balanceMoney;
+  money += Math.floor(balanceMoney);
   food += balanceFood;
   population += balancePopulation;
 
