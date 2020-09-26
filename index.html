@@ -16,8 +16,8 @@
             <td>Жители</td>
             <td>Деньги</td>
             <td>Еда</td>
-            <td>Фермы</td>
-            <td>Банки</td>
+            <td>Жилые места</td>
+            <!--<td>Банки</td>-->
             <td>Ячейки зданий</td>
             <td>Рабочие места</td>
             <td>Эффективность построек</td>
@@ -27,8 +27,8 @@
             <td id="population"></td>
             <td id='money'></td>
             <td id='food'></td>
-            <td id='farm'></td>
-            <td id='bank'></td>
+            <td id='livingPlaces'></td>
+            <!--<td id='bank'></td>-->
             <td id='constructionCell'></td>
             <td id="workplaces"></td>
             <td id='buildEfficiency'></td>
@@ -42,26 +42,37 @@
 
           <div class='building'>
             <img src='farm.png' alt='Ферма'>
+            <div><p>Ферм: <span class='container'id='farm'></span></p></div>
             <input type='number' id='farm' name="farm" value="farm"></input>
-            <input type="button" onclick="building(farm)" value= "Построить ферму"></input>
+            <input type="button" onclick="building(farm)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>
             <img src='bank.png' alt='Банк'>
+            <div><p>Банков: <span class='container'id='bank'></span></p></div>
             <input type='number' id='bank' name="bank" value="bank"></input>
-            <input type="button" onclick="building(bank)" value= "Построить банк"></input>
+            <input type="button" onclick="building(bank)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>
             <img src='barn.png' alt='Амбар' weight=64px; height = 64px;>
+            <div><p>Амбаров: <span class='container'id='barn'></span></p></div>
             <input type='number' id='barn' name="barn" value="barn"></input>
-            <input type="button" onclick="building(barn)" value= "Построить амбар"></input>
+            <input type="button" onclick="building(barn)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>
             <img src='barracks.png' alt='Казарма' weight=64px; height = 64px;>
+            <div><p>Казарм: <span class='container'id='barracks'></span></p></div>
             <input type='number' id='barracks' name="barracks" value="barracks"></input>
-            <input type="button" onclick="building(bank)" value= "Построить казарму"></input>
+            <input type="button" onclick="building(barracks)" value= "Построить"></input>
+          </div>
+          <div class="break"></div>
+          <div class='building'>
+            <img src='house.png' alt='Дом' weight=64px; height = 64px;>
+            <div><p>Домов: <span class='container'id='house'></span></p></div>
+            <input type='number' id='house' name="house" value="house"></input>
+            <input type="button" onclick="building(house)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>

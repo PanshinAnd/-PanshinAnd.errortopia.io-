@@ -1,8 +1,9 @@
 class Building {
-  constructor(typeRes, countRes, countWorkplaces, countBuildings) {
+  constructor(typeRes, countRes, countWorkplaces, countLivingPlaces, countBuildings) {
     this.typeRes = typeRes;
     this.countRes = countRes;
     this.countWorkplaces = countWorkplaces;
+    this.countLivingPlaces = countLivingPlaces;
     this.countBuildings = countBuildings;
   }
   income(){
@@ -11,11 +12,16 @@ class Building {
   totalWorkplaces(){
     return this.countWorkplaces * this.countBuildings;
   }
+  totalLivingPlaces(){
+    return this.countLivingPlaces * this.countBuildings;
+  }
 }
 
-let farm = new Building("food", 0.7, 25, 0);
-let bank = new Building("money", 0.25, 20, 0);
-let barn = new Building("foodLimit", 50, 15, 0);
+let farm = new Building("food",         0.7,  25, 25, 0);
+let bank = new Building("money",        0.25, 20, 5,  0);
+let barn = new Building("foodLimit",    50,   15, 15, 0);
+let barracks = new Building("warrior",  0.2,    25, 25, 0);
+let house = new Building("empty",0,  0,  50, 0);
 
 const populationGrowth = 0.02, initialFoodLimit = 10000;
 let population = 100;
@@ -24,6 +30,7 @@ let food = 130, foodLimit = initialFoodLimit;
 let currentTurn = 0;
 let balanceFood, balanceMoney, balancePopulation, balanceFoodLimit = 0;
 let constructionCells = 50;
+let livingPlaces =  constructionCells * 15;
 
 function freeCells() {
   return constructionCells - totalBuildings();
@@ -37,14 +44,20 @@ function balanceAccrual(){
   if (population > sumWorkplaces()){
     balanceMoney += Math.floor(population-sumWorkplaces());
   }
-  balanceFood = Math.floor(farm.income() - population);
+
+  livingPlaces = constructionCells * 15 + sumLivingPlaces();
+
+  balanceFood = Math.floor(farm.income() + (constructionCells * 5) - population);
   foodLimit = barn.income() + initialFoodLimit;
-  //alert(barn.income());
+
   if ((food + balanceFood) > foodLimit)
     balanceFood = foodLimit - food;
   balancePopulation = Math.floor(population * populationGrowth);
   if(food == 0){
     balancePopulation = 0;
+  }
+  if((population + balancePopulation) > livingPlaces){
+    balancePopulation = livingPlaces - population;
   }
   //Если прирост еды положительный, и
   //Еды с учетом прироста не хватает на население с учетом прироста, то
@@ -74,6 +87,9 @@ function buildEfficiency(){
 function sumWorkplaces(){
   return farm.totalWorkplaces() + bank.totalWorkplaces() + barn.totalWorkplaces();
 }
+function sumLivingPlaces(){
+  return farm.totalLivingPlaces() + bank.totalLivingPlaces() + barn.totalLivingPlaces() + barracks.totalLivingPlaces() + house.totalLivingPlaces();
+}
 function updateStat(){
   let td;
   balanceAccrual();
@@ -86,12 +102,6 @@ function updateStat(){
     else{
       td.innerHTML += balancePopulation;
     }
-
-    td = document.getElementById('farm');
-    td.innerHTML = farm.countBuildings;
-
-    td = document.getElementById('bank');
-    td.innerHTML = bank.countBuildings;
 
     td = document.getElementById('money');
     td.innerHTML = money;
@@ -112,6 +122,11 @@ function updateStat(){
     else {
       td.innerHTML += Math.floor(balanceFood);
     }
+
+    td = document.getElementById('livingPlaces');
+    td.innerHTML = livingPlaces;
+
+
     td = document.getElementById('constructionCell');
     td.innerHTML = constructionCells;
 
@@ -123,6 +138,21 @@ function updateStat(){
 
     td = document.getElementById('currentTurn');
     td.innerHTML = currentTurn;
+
+    td = document.getElementById('farm');
+    td.innerHTML = farm.countBuildings;
+
+    td = document.getElementById('bank');
+    td.innerHTML = bank.countBuildings;
+
+    td = document.getElementById('barn');
+    td.innerHTML = barn.countBuildings;
+
+    td = document.getElementById('barracks');
+    td.innerHTML = barracks.countBuildings;
+
+    td = document.getElementById('house');
+    td.innerHTML = house.countBuildings;
 
 }
 function nextTurn() {
