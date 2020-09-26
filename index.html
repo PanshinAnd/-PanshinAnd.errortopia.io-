@@ -18,6 +18,7 @@
             <td>Еда</td>
             <td>Фермы</td>
             <td>Банки</td>
+            <td>Ячейки зданий</td>
             <td>Рабочие места</td>
             <td>Эффективность построек</td>
             <td>Текущий ход </td>
@@ -28,6 +29,7 @@
             <td id='food'></td>
             <td id='farm'></td>
             <td id='bank'></td>
+            <td id='constructionCell'></td>
             <td id="workplaces"></td>
             <td id='buildEfficiency'></td>
             <td id='currentTurn'></td>
@@ -37,12 +39,35 @@
       <div class='container'>
         <form action="main.js" name ="form">
           <p>Введите в форму ниже текущий ход и количество ферм, которые вы строите.</p>
-          <!--в связи с этим вопрос: зачем вводить текущий ход, если он ни на что не влияет? -->
-          <input type='number' id='farm' name="farm" value="farm"></input>
-          <input type="button" onclick="building(farm)" value= "Построить ферму"></input>
+
+          <div class='building'>
+            <img src='farm.png' alt='Ферма'>
+            <input type='number' id='farm' name="farm" value="farm"></input>
+            <input type="button" onclick="building(farm)" value= "Построить ферму"></input>
+          </div>
           <div class="break"></div>
-          <input type='number' id='bank' name="bank" value="bank"></input>
-          <input type="button" onclick="building(bank)" value= "Построить банк"></input>
+          <div class='building'>
+            <img src='bank.png' alt='Банк'>
+            <input type='number' id='bank' name="bank" value="bank"></input>
+            <input type="button" onclick="building(bank)" value= "Построить банк"></input>
+          </div>
+          <div class="break"></div>
+          <div class='building'>
+            <img src='barn.png' alt='Амбар' weight=64px; height = 64px;>
+            <input type='number' id='barn' name="barn" value="barn"></input>
+            <input type="button" onclick="building(barn)" value= "Построить амбар"></input>
+          </div>
+          <div class="break"></div>
+          <div class='building'>
+            <img src='barracks.png' alt='Казарма' weight=64px; height = 64px;>
+            <input type='number' id='barracks' name="barracks" value="barracks"></input>
+            <input type="button" onclick="building(bank)" value= "Построить казарму"></input>
+          </div>
+          <div class="break"></div>
+          <div class='building'>
+            <img src='empty.png' alt='Пустырь' weight=64px; height = 64px;>
+            <p>Пустырей осталось: <span id="freeCells"></span></p>
+          </div>
           <div class="break"></div>
           <input type="button" onclick="updateStat()" value = 'Обновить данные'></input>
           <input type="button" onclick="nextTurn()" value = 'Следующий ход'></input>
