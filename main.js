@@ -1,10 +1,11 @@
 class Building {
-  constructor(typeRes, countRes, countWorkplaces, countLivingPlaces, countBuildings) {
+  constructor(typeRes, countRes, countWorkplaces, countLivingPlaces, countBuildings,  cost) {
     this.typeRes = typeRes;
     this.countRes = countRes;
     this.countWorkplaces = countWorkplaces;
     this.countLivingPlaces = countLivingPlaces;
     this.countBuildings = countBuildings;
+    this.cost = cost;
   }
   income(){
     return this.countBuildings * this.countRes * buildEfficiency();
@@ -16,22 +17,29 @@ class Building {
     return this.countLivingPlaces * this.countBuildings;
   }
 }
-
-let farm = new Building("food",         0.7,  25, 25, 0);
-let bank = new Building("money",        0.25, 20, 5,  0);
-let barn = new Building("foodLimit",    50,   15, 15, 0);
-let barracks = new Building("warrior",  0.2,    25, 25, 0);
-let house = new Building("empty",0,  0,  50, 0);
-
-const populationGrowth = 0.02, initialFoodLimit = 10000;
+const populationGrowth = 0.02, initialFoodLimit = 10000, constructionCells = 50;
 let population = 100;
 let money = 400;
 let food = 130, foodLimit = initialFoodLimit;
 let currentTurn = 0;
 let balanceFood, balanceMoney, balancePopulation, balanceFoodLimit = 0;
-let constructionCells = 50;
-let livingPlaces =  constructionCells * 15;
+let researching = 0;
 
+let farm = new Building("food",         0.7,  25, 25, 0,   defaultBuldingCost());
+let bank = new Building("money",        0.25, 20, 5,  0,   defaultBuldingCost());
+let barn = new Building("foodLimit",    50,   15, 15, 0,   defaultBuldingCost());
+let barracks = new Building("warrior",  0.2,  25, 25, 0,   defaultBuldingCost());
+let house = new Building("empty",       0,    0,  50, 0,   defaultBuldingCost());
+let wasteland = new Building("food", 0.05, 0,  15,    constructionCells,   0);
+wasteland.cost = livingPlacesCost();
+
+
+function defaultBuldingCost() {
+  return 100;
+}
+function livingPlacesCost(){
+  return 500 + wasteland.countBuildings * 100;
+}
 function freeCells() {
   return constructionCells - totalBuildings();
 }
@@ -45,9 +53,9 @@ function balanceAccrual(){
     balanceMoney += Math.floor(population-sumWorkplaces());
   }
 
-  livingPlaces = constructionCells * 15 + sumLivingPlaces();
+  livingPlaces = livingPlaces + sumLivingPlaces() + researching;
 
-  balanceFood = Math.floor(farm.income() + (constructionCells * 5) - population);
+  balanceFood = Math.floor(farm.income() + (wasteland.income()) - population);
   foodLimit = barn.income() + initialFoodLimit;
 
   if ((food + balanceFood) > foodLimit)
@@ -56,8 +64,8 @@ function balanceAccrual(){
   if(food == 0){
     balancePopulation = 0;
   }
-  if((population + balancePopulation) > livingPlaces){
-    balancePopulation = livingPlaces - population;
+  if((population + balancePopulation) > sumLivingPlaces()){
+    balancePopulation = sumLivingPlaces() - population;
   }
   //Если прирост еды положительный, и
   //Еды с учетом прироста не хватает на население с учетом прироста, то
@@ -88,7 +96,7 @@ function sumWorkplaces(){
   return farm.totalWorkplaces() + bank.totalWorkplaces() + barn.totalWorkplaces();
 }
 function sumLivingPlaces(){
-  return farm.totalLivingPlaces() + bank.totalLivingPlaces() + barn.totalLivingPlaces() + barracks.totalLivingPlaces() + house.totalLivingPlaces();
+  return farm.totalLivingPlaces() + bank.totalLivingPlaces() + barn.totalLivingPlaces() + barracks.totalLivingPlaces() + house.totalLivingPlaces() + wasteland.totalLivingPlaces();
 }
 function updateStat(){
   let td;
@@ -124,7 +132,7 @@ function updateStat(){
     }
 
     td = document.getElementById('livingPlaces');
-    td.innerHTML = livingPlaces;
+    td.innerHTML = sumLivingPlaces();
 
 
     td = document.getElementById('constructionCell');
@@ -171,9 +179,16 @@ function nextTurn() {
   updateStat();
 }
 
+function research(){
+
+}
+
 function  building(build){
   countBuildings = build.value;
   buildName = build.name;
+  if (buildName == "wasteland"){
+    alert("Вы строите пустырь");
+  }
   if (money >= 100){
     let input = document.getElementById(buildName).value;
     let countBuildings = Number(build.value);
