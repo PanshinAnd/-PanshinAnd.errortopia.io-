@@ -77,7 +77,9 @@
           <div class="break"></div>
           <div class='building'>
             <img src='empty.png' alt='Пустырь' weight=64px; height = 64px;>
-            <p>Пустырей осталось: <span id="freeCells"></span></p>
+            <p>Пустырей: <span  class='container' id="freeCells"></span></p>
+            <input type='number' id='wasteland' name="wasteland" value="wasteland"></input>
+            <input type="button" onclick="building(wasteland)" value= "Исследовать новые земли"></input>
           </div>
           <div class="break"></div>
           <input type="button" onclick="updateStat()" value = 'Обновить данные'></input>

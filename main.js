@@ -17,13 +17,14 @@ class Building {
     return this.countLivingPlaces * this.countBuildings;
   }
 }
-const populationGrowth = 0.02, initialFoodLimit = 10000, constructionCells = 50;
+const populationGrowth = 0.02, initialFoodLimit = 10000;
+let constructionCells = 50;
 let population = 100;
 let money = 400;
 let food = 130, foodLimit = initialFoodLimit;
 let currentTurn = 0;
 let balanceFood, balanceMoney, balancePopulation, balanceFoodLimit = 0;
-let researching = 0;
+let researchingCells = 0;
 
 let farm = new Building("food",         0.7,  25, 25, 0,   defaultBuldingCost());
 let bank = new Building("money",        0.25, 20, 5,  0,   defaultBuldingCost());
@@ -31,13 +32,13 @@ let barn = new Building("foodLimit",    50,   15, 15, 0,   defaultBuldingCost())
 let barracks = new Building("warrior",  0.2,  25, 25, 0,   defaultBuldingCost());
 let house = new Building("empty",       0,    0,  50, 0,   defaultBuldingCost());
 let wasteland = new Building("food", 0.05, 0,  15,    constructionCells,   0);
-wasteland.cost = livingPlacesCost();
+wasteland.cost = researchCost();
 
 
 function defaultBuldingCost() {
   return 100;
 }
-function livingPlacesCost(){
+function researchCost(){
   return 500 + wasteland.countBuildings * 100;
 }
 function freeCells() {
@@ -53,7 +54,7 @@ function balanceAccrual(){
     balanceMoney += Math.floor(population-sumWorkplaces());
   }
 
-  livingPlaces = livingPlaces + sumLivingPlaces() + researching;
+  livingPlaces = livingPlaces + sumLivingPlaces();
 
   balanceFood = Math.floor(farm.income() + (wasteland.income()) - population);
   foodLimit = barn.income() + initialFoodLimit;
@@ -139,7 +140,7 @@ function updateStat(){
     td.innerHTML = constructionCells;
 
     td = document.getElementById('freeCells');
-    td.innerHTML = freeCells();
+    td.innerHTML = wasteland.countBuildings;
 
     td = document.getElementById('workplaces');
     td.innerHTML = sumWorkplaces();
@@ -173,21 +174,33 @@ function nextTurn() {
     population += food;
     food = 0;
   }
-
+  wasteland.countBuildings += researchingCells;
+  constructionCells += researchingCells;
+  researchingCells = 0;
 
   currentTurn ++;
   updateStat();
 }
 
-function research(){
-
+function research(countBuildings){
+  while(countBuildings >= 1){
+    if(money >= researchCost()){
+      money -= researchCost();
+      researchingCells++;
+      countBuildings--;
+    }
+    else{
+      alert("Недостаточно денег на исследование");
+      break;
+    }
+  }
 }
 
 function  building(build){
   countBuildings = build.value;
   buildName = build.name;
   if (buildName == "wasteland"){
-    alert("Вы строите пустырь");
+    research(countBuildings);
   }
   if (money >= 100){
     let input = document.getElementById(buildName).value;
@@ -197,6 +210,7 @@ function  building(build){
           if (freeCells() >= 1){
             eval(buildName).countBuildings++;
             countBuildings--;
+            wasteland.countBuildings--;
             money = money - 100;
           }
           else{
