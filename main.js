@@ -45,7 +45,7 @@ function freeCells() {
   return constructionCells - totalBuildings();
 }
 function totalBuildings() {
-  return farm.countBuildings + bank.countBuildings + barn.countBuildings;
+  return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings;
 }
 
 function balanceAccrual(){
@@ -211,7 +211,7 @@ function  building(build){
             eval(buildName).countBuildings++;
             countBuildings--;
             wasteland.countBuildings--;
-            money = money - 100;
+            money -= 100;
           }
           else{
             alert("Все ячейки строительства заняты");
@@ -228,6 +228,17 @@ function  building(build){
     alert("Недостаточно денег для постройки");
   }
 }
+/*function recruitment(countRecruits){
+  if (money >= (countRecruits * warrior.costHiring)){
+    if ((population + countRecruits) > sumLivingPlaces()){
+      countRecruits  = sumLivingPlaces() - population;
+      alert("Вы желаете нанять больше юнитов, чем можете себе позволить. Будет нанято лишь ", countRecruits);
+    }
+
+    warrior.countUnits += countRecruits;
+    money -= countRecruits * warrior.costHiring;
+  }
+}*/
 window.onload = function() {
   updateStat();
 }
