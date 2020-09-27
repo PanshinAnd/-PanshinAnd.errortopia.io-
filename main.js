@@ -45,7 +45,7 @@ function freeCells() {
   return constructionCells - totalBuildings();
 }
 function totalBuildings() {
-  return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings;
+  return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings + house.countBuildings;
 }
 
 function balanceAccrual(){
