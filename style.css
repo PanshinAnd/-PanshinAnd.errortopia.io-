@@ -7,7 +7,7 @@ table {
   border-color: red;
   margin-left: auto;
   margin-right: auto;
-  width:60em;
+  width: 70%;
 }
 .break {
   flex-basis: 100%;
@@ -22,3 +22,9 @@ table {
   display: flex;
   align-items: flex-end;
 }
+.icon{
+  width: 64px;
+  height: 64px;
+}
+#left { position: relative; left: 0; top: 0; width: 50%; }
+#right { position: relative; right: 0; top: 0; width: 50%; }
