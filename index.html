@@ -9,75 +9,83 @@
   </head>
   <body>
     <div class="strict">
-      <!--В этом div я буду строго следовать заданию -->
-      <div class="stat">
-        <table>
-          <tr>
-            <td>Жители</td>
-            <td>Деньги</td>
-            <td>Еда</td>
-            <td>Жилые места</td>
-            <!--<td>Банки</td>-->
-            <td>Ячейки зданий</td>
-            <td>Рабочие места</td>
-            <td>Эффективность построек</td>
-            <td>Текущий ход </td>
-          </tr>
-          <tr>
-            <td id="population"></td>
-            <td id='money'></td>
-            <td id='food'></td>
-            <td id='livingPlaces'></td>
-            <!--<td id='bank'></td>-->
-            <td id='constructionCell'></td>
-            <td id="workplaces"></td>
-            <td id='buildEfficiency'></td>
-            <td id='currentTurn'></td>
-          </tr>
-        </table>
+      <div class = "container table">
+        <div class = 'column'>
+          <div class = 'block item'>Жители</div>
+          <div class = 'block item' id = 'population'></div>
+        </div>
+        <div class = 'column'>
+          <div class = 'block item'>Деньги</div>
+          <div class = 'block item' id = 'money'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Еда</div>
+          <div class = 'block' id = 'food'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Жилые места</div>
+          <div class = 'block' id = 'livingPlaces'></div>
+        </div>
+
+        <div class = 'block'>
+          <div class = 'block'>Ячейки зданий</div>
+          <div class = 'block' id = 'constructionCell'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Рабочие места</div>
+          <div class = 'block' id = 'workplaces'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Эффективность построек</div>
+          <div class = 'block' id = 'buildEfficiency'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Текущий ход</div>
+          <div class = 'block' id = 'currentTurn'></div>
+        </div>
+        <div class ='break'></div>
       </div>
-      <div class='container'>
+      <div class='leftColumn'>
         <form action="main.js" name ="form">
-          <p>Введите в форму ниже текущий ход и количество ферм, которые вы строите.</p>
 
           <div class='building'>
-            <img src='farm.png' alt='Ферма' class='icon'>
-            <div><p>Ферм: <span class='container'id='farm'></span></p></div>
+            <img src='image/farm.png' alt='Ферма' class='icon'>
+            <div><p>Ферм: <span class='countBuildings' id='farm'></span></p></div>
             <input type='number' id='farm' name="farm" value="farm"></input>
             <input type="button" onclick="building(farm)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>
-            <img src='bank.png' alt='Банк' class='icon'>
-            <div><p>Банков: <span class='container'id='bank'></span></p></div>
+            <img src='image/bank.png' alt='Банк' class='icon'>
+            <div><p>Банков: <span class='countBuildings'id='bank'></span></p></div>
             <input type='number' id='bank' name="bank" value="bank"></input>
             <input type="button" onclick="building(bank)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>
-            <img src='barn.png'  alt='Амбар' class='icon'>
-            <div><p>Амбаров: <span class='container'id='barn'></span></p></div>
+            <img src='image/barn.png'  alt='Амбар' class='icon'>
+            <div><p>Амбаров: <span class='countBuildings'id='barn'></span></p></div>
             <input type='number' id='barn' name="barn" value="barn"></input>
             <input type="button" onclick="building(barn)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>
-            <img src='barracks.png' alt='Казарма' class='icon'>
-            <div><p>Казарм: <span class='container'id='barracks'></span></p></div>
+            <img src='image/barracks.png' alt='Казарма' class='icon'>
+            <div><p>Казарм: <span class='countBuildings'id='barracks'></span></p></div>
             <input type='number' id='barracks' name="barracks" value="barracks"></input>
             <input type="button" onclick="building(barracks)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>
-            <img src='house.png' alt='Дом' class='icon'>
-            <div><p>Домов: <span class='container'id='house'></span></p></div>
+            <img src='image/house.png' alt='Дом' class='icon'>
+            <div><p>Домов: <span class='countBuildings'id='house'></span></p></div>
             <input type='number' id='house' name="house" value="house"></input>
             <input type="button" onclick="building(house)" value= "Построить"></input>
           </div>
           <div class="break"></div>
           <div class='building'>
-            <img src='empty.png' alt='Пустырь' class='icon'>
-            <p>Пустырей: <span  class='container' id="freeCells"></span></p>
+            <img src='image/empty.png' alt='Пустырь' class='icon'>
+            <p>Пустырей: <span  class='countBuildings' id="freeCells"></span></p>
             <input type='number' id='wasteland' name="wasteland" value="wasteland"></input>
             <input type="button" onclick="building(wasteland)" value= "Исследовать новые земли"></input>
           </div>
@@ -86,9 +94,14 @@
           <input type="button" onclick="nextTurn()" value = 'Следующий ход'></input>
         </form>
       </div>
-    </div>
-    <div class="update">
-      <!--В этом div я модифицирую задание, чтобы использовать все указанные в нем понятия -->
+      <div class='rightColumn'>
+        <form class='recruit' name='recruit'>
+          <img src='image/warrior.png' alt='Солдат' class='icon'>
+          <p> Солдат: <span class='countSolders' id='countWarriors'></span></p>
+          <input type='number' id = 'infantryman'  name = 'infantryman'  value='infantryman'></input>
+          <input type='button' onclick="recruitment(infantryman)" value='Нанять солдат'></input>
+        </form>
+      </div>
     </div>
   </body>
 </html>

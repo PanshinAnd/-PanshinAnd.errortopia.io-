@@ -1,5 +1,6 @@
 class Solder{
-  constructor(costHiring, costMaintеnanceMoney, costMaintеnanceFood, countUnits){
+  constructor(name, costHiring, costMaintеnanceMoney, costMaintеnanceFood, countUnits){
+    this.name = name;
     this.costHiring = costHiring;
     this.costMaintеnanceMoney = costMaintеnanceMoney;
     this.costMaintеnanceFood  = costMaintеnanceFood;
@@ -22,7 +23,12 @@ class Building {
     this.cost = cost;
   }
   income(){
-    return this.countBuildings * this.countRes * buildEfficiency();
+    if (this.countWorkplaces > 0){
+        return this.countBuildings * this.countRes * buildEfficiency();
+    }
+    else{
+      return this.countBuildings * this.countRes * 100;
+    }
   }
   totalWorkplaces(){
     return this.countWorkplaces * this.countBuildings;
@@ -43,15 +49,15 @@ let researchingCells = 0;
 
 let farm = new Building("food",         0.7,  25, 25, 0,   defaultBuldingCost());
 let bank = new Building("money",        0.25, 20, 5,  0,   defaultBuldingCost());
-let barn = new Building("foodLimit",    50,   15, 15, 0,   defaultBuldingCost());
-let barracks = new Building("warrior",  0.2,  25, 25, 0,   defaultBuldingCost());
+let barn = new Building("foodLimit",    50,   0, 15, 0,   defaultBuldingCost());
+let barracks = new Building("infantryman",  0.2,  25, 25, 0,   defaultBuldingCost());
 let house = new Building("empty",       0,    0,  50, 0,   defaultBuldingCost());
 let wasteland = new Building("food", 0.05, 0,  15,    constructionCells,   0);
-let warrior = new Solder(5,5,1,0);
+let infantryman = new Solder('infantryman',5,5,1,0);
 wasteland.cost = researchCostMoney();
 
 function civils(){
-  return population - warrior.countUnits;
+  return population - infantryman.countUnits;
 }
 function defaultBuldingCost() {
   return 100;
@@ -70,10 +76,10 @@ function totalBuildings() {
 }
 
 function balanceAccrual(){
-  balanceMoney -= warrior.totalMaintеnanceMoney();
-  balanceMoney += Math.floor(Math.min(population,sumWorkplaces()) * 3 + bank.income());
-  if (population > sumWorkplaces())
-    balanceMoney += Math.floor(population-sumWorkplaces());
+  balanceMoney -= infantryman.totalMaintеnanceMoney();
+  balanceMoney += Math.floor(Math.min(civils(),sumWorkplaces()) * 3 + bank.income());
+  if (civils() > sumWorkplaces())
+    balanceMoney += Math.floor(civils()-sumWorkplaces());
 
   livingPlaces = livingPlaces + sumLivingPlaces();
 
@@ -169,6 +175,9 @@ function updateStat(){
     td = document.getElementById('currentTurn');
     td.innerHTML = currentTurn;
 
+    td = document.getElementById('buildEfficiency');
+    td.innerHTML = buildEfficiency();
+
     td = document.getElementById('farm');
     td.innerHTML = farm.countBuildings;
 
@@ -183,6 +192,9 @@ function updateStat(){
 
     td = document.getElementById('house');
     td.innerHTML = house.countBuildings;
+
+    td = document.getElementById('countWarriors');
+    td.innerHTML = infantryman.countUnits;
 
 }
 function nextTurn() {
@@ -199,8 +211,8 @@ function nextTurn() {
   constructionCells += researchingCells;
   researchingCells = 0;
 
-  if  (population < warrior.countUnits){
-    warrior.countUnits = population;
+  if  (population < infantryman.countUnits){
+    infantryman.countUnits = population;
   }
 
   currentTurn ++;
@@ -209,9 +221,9 @@ function nextTurn() {
 
 function research(countBuildings){
   while(countBuildings >= 1){
-    if(money >= researchCostMoney() && warrior.countUnits >= researchCostSolders()){
+    if(money >= researchCostMoney() && infantryman.countUnits >= researchCostSolders()){
       money -= researchCostMoney();
-      warrior.countUnits -= researchCostSolders();
+      infantryman.countUnits -= researchCostSolders();
       researchingCells++;
       countBuildings--;
     }
@@ -223,10 +235,15 @@ function research(countBuildings){
 }
 
 function  building(build){
+  console.log(build)
   countBuildings = build.value;
   buildName = build.name;
   if (buildName == "wasteland"){
     research(countBuildings);
+  }
+  if (countBuildings < 1){
+    alert("Нужно возвести хотя бы одну постройку");
+    return;
   }
   if (money >= 100){
     let input = document.getElementById(buildName).value;
@@ -254,17 +271,22 @@ function  building(build){
     alert("Недостаточно денег для постройки");
   }
 }
-function recruitment(countRecruits){
-  if (countRecruits <= barracks.countRes * buildEfficiency()){
-    if (money >= (countRecruits * warrior.costHiring)){
-      if ((population + countRecruits) > sumLivingPlaces()){
-        countRecruits  = sumLivingPlaces() - population;
-        alert("Вы желаете нанять больше юнитов, чем можете себе позволить. Будет нанято лишь ", countRecruits);
-      }
 
-      warrior.countUnits += countRecruits;
-      money -= countRecruits * warrior.costHiring;
+
+function recruitment(recruit){
+  console.log(recruit);
+  countRecruits = Number(recruit.value);
+  recruitName = recruit.name;
+  if (countRecruits <= barracks.income()){
+    if (money >= (countRecruits * eval(recruitName).costHiring)){
+      eval(recruitName).countUnits += countRecruits;
     }
+    else{
+      alert("Вы хотите обучить больше воинов, чем может позволить ваш бюджет");
+    }
+    money -= countRecruits * infantryman.costHiring;
+    console.log(eval(recruitName).countUnits);
+    updateStat();
   }
   else {
     alert("Вы хотите обучить больше юнитов, чем это могут сделать казармы");
