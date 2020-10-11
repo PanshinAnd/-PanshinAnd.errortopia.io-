@@ -55,6 +55,7 @@ let house = new Building("empty",       0,    0,  50, 0,   defaultBuldingCost())
 let wasteland = new Building("food", 0.05, 0,  15,    constructionCells,   0);
 let infantryman = new Solder('infantryman',5,5,1,0);
 wasteland.cost = researchCostMoney();
+let countSoldersStatTurn = infantryman.countUnits;
 
 function civils(){
   return population - infantryman.countUnits;
@@ -76,6 +77,7 @@ function totalBuildings() {
 }
 
 function balanceAccrual(){
+  balanceMoney = 0;
   balanceMoney -= infantryman.totalMaintеnanceMoney();
   balanceMoney += Math.floor(Math.min(civils(),sumWorkplaces()) * 3 + bank.income());
   if (civils() > sumWorkplaces())
@@ -121,7 +123,7 @@ function buildEfficiency(){
   }
 }
 function sumWorkplaces(){
-  return farm.totalWorkplaces() + bank.totalWorkplaces() + barn.totalWorkplaces();
+  return farm.totalWorkplaces() + bank.totalWorkplaces() + barn.totalWorkplaces() + barracks.totalWorkplaces();
 }
 function sumLivingPlaces(){
   return farm.totalLivingPlaces() + bank.totalLivingPlaces() + barn.totalLivingPlaces() + barracks.totalLivingPlaces() + house.totalLivingPlaces() + wasteland.totalLivingPlaces();
@@ -161,6 +163,9 @@ function updateStat(){
 
     td = document.getElementById('livingPlaces');
     td.innerHTML = sumLivingPlaces();
+
+    td = document.getElementById('civils');
+    td.innerHTML = civils();
 
 
     td = document.getElementById('constructionCell');
@@ -216,6 +221,7 @@ function nextTurn() {
   }
 
   currentTurn ++;
+  countSoldersStatTurn = infantryman.countUnits;
   updateStat();
 }
 
@@ -278,15 +284,22 @@ function recruitment(recruit){
   countRecruits = Number(recruit.value);
   recruitName = recruit.name;
   if (countRecruits <= barracks.income()){
-    if (money >= (countRecruits * eval(recruitName).costHiring)){
-      eval(recruitName).countUnits += countRecruits;
+    //Костыль, предотвращающий найм большего числа юнитов, чем могут позволить казармы
+    //путем найма несколько раз за один ход небольшго числа солдат
+    if(eval(recruitName).countUnits + countRecruits <= countSoldersStatTurn + barracks.income()){
+      if (money >= (countRecruits * eval(recruitName).costHiring)){
+        eval(recruitName).countUnits += countRecruits;
+      }
+      else{
+        alert("Вы хотите обучить больше воинов, чем может позволить ваш бюджет");
+      }
+      money -= countRecruits * infantryman.costHiring;
+      console.log(eval(recruitName).countUnits);
+      updateStat();
     }
-    else{
-      alert("Вы хотите обучить больше воинов, чем может позволить ваш бюджет");
+    else {
+      alert("Вы хотите обучить больше юнитов, чем это могут сделать казармы");
     }
-    money -= countRecruits * infantryman.costHiring;
-    console.log(eval(recruitName).countUnits);
-    updateStat();
   }
   else {
     alert("Вы хотите обучить больше юнитов, чем это могут сделать казармы");
