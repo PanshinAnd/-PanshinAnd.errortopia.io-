@@ -75,6 +75,13 @@ function freeCells() {
 function totalBuildings() {
   return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings + house.countBuildings;
 }
+function jobless(){
+  let jobless = civils() - sumWorkplaces();
+  if (jobless < 0){
+    jobless = 0;
+  }
+  return jobless;
+}
 
 function balanceAccrual(){
   balanceMoney = 0;
@@ -167,6 +174,8 @@ function updateStat(){
     td = document.getElementById('civils');
     td.innerHTML = civils();
 
+    td = document.getElementById('jobless');
+    td.innerHTML = jobless();
 
     td = document.getElementById('constructionCell');
     td.innerHTML = constructionCells;
