@@ -56,6 +56,13 @@
   align-items: flex-end;
 }
 .icon{
-  width: 64px;
-  height: 64px;
+  width: 128px;
+  height: 128px;
+}
+.form{
+  max-width: 100px;
+  max-height: 34px;
+}
+.submit {
+  height: 34px;
 }
