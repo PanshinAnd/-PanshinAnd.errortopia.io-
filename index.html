@@ -53,61 +53,107 @@
         <div class ='break'></div>
       </div>
       <div class='leftColumn'>
-        <form action="main.js" name ="form">
-
           <div class='building'>
             <img src='image/farm.png' alt='Ферма' class='icon'>
-            <div><p>Ферм: <span class='countBuildings' id='farm'></span></p></div>
-            <input type='number' class = 'form' id='farm' name="farm" value="farm"></input>
-            <input type="button" class='submit' onclick="building(farm)" value= "Построить"></input>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Производит еду. По умолчанию дает 70 еды, 25 рабочих мест, 25 жилых мест.</p>
+                <p>Ферм: <span class='countBuildings' id='farm'></span></p>
+              </div>
+              <div class="building-form">
+                <input type='number' class = 'form' id='farm' name="farm" value="farm"></input>
+                <input type="button" class='submit' onclick="building(farm)" value= "Построить"></input>
+              </div>
+            </div>
           </div>
           <div class="break"></div>
           <div class='building'>
             <img src='image/bank.png' alt='Банк' class='icon'>
-            <div><p>Банков: <span class='countBuildings'id='bank'></span></p></div>
-            <input type='number'class = 'form' id='bank' name="bank" value="bank"></input>
-            <input type="button" class='submit' onclick="building(bank)" value= "Построить"></input>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Производит деньги. По умолчанию дает 25 денег, 20 рабочих мест, 5 жилых мест.</p>
+                <p>Банков: <span class='countBuildings'id='bank'></span></p>
+              </div>
+              <div class="building-form">
+                <input type='number'class = 'form' id='bank' name="bank" value="bank"></input>
+                <input type="button" class='submit' onclick="building(bank)" value= "Построить"></input>
+              </div>
+            </div>
           </div>
           <div class="break"></div>
           <div class='building'>
             <img src='image/barn.png'  alt='Амбар' class='icon'>
-            <div><p>Амбаров: <span class='countBuildings'id='barn'></span></p></div>
-            <input type='number'class = 'form' id='barn' name="barn" value="barn"></input>
-            <input type="button" class='submit' onclick="building(barn)" value= "Построить"></input>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Расширяет лимит на хранение еды. По умолчанию на 500 еды. Не дает рабочих мест, дает 15 жилых мест</p>
+                <p>Амбаров: <span class='countBuildings'id='barn'></span></p>
+              </div>
+              <div class="building-form">
+                <input type='number'class = 'form' id='barn' name="barn" value="barn"></input>
+                <input type="button" class='submit' onclick="building(barn)" value= "Построить"></input>
+              </div>
+            </div>
           </div>
           <div class="break"></div>
           <div class='building'>
             <img src='image/barracks.png' alt='Казарма' class='icon'>
-            <div><p>Казарм: <span class='countBuildings'id='barracks'></span></p></div>
-            <input type='number'class = 'form' id='barracks' name="barracks" value="barracks"></input>
-            <input type="button" class='submit'onclick="building(barracks)" value= "Построить"></input>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Позволяет нанимать солдат. По умолчанию 20 солдат/ход. 25 рабочих мест, 25 жилых.</p>
+                <p>Казарм: <span class='countBuildings'id='barracks'></span></p>
+              </div>
+              <div class="building-form">
+                <input type='number'class = 'form' id='barracks' name="barracks" value="barracks"></input>
+                <input type="button" class='submit'onclick="building(barracks)" value= "Построить"></input>
+              </div>
+            </div>
           </div>
           <div class="break"></div>
           <div class='building'>
             <img src='image/house.png' alt='Дом' class='icon'>
-            <div><p>Домов: <span class='countBuildings'id='house'></span></p></div>
-            <input type='number' class = 'form' id='house' name="house" value="house"></input>
-            <input type="button"class='submit' onclick="building(house)" value= "Построить"></input>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Увеличивает число жилых мест по умолчанию на 50.</p>
+                <p>Домов: <span class='countBuildings'id='house'></span></p>
+              </div>
+              <div class="building-form">
+                <input type='number' class = 'form' id='house' name="house" value="house"></input>
+                <input type="button"class='submit' onclick="building(house)" value= "Построить"></input>
+              </div>
+            </div>
           </div>
           <div class="break"></div>
           <div class='building'>
             <img src='image/empty.png' alt='Пустырь' class='icon'>
-            <p>Пустырей: <span  class='countBuildings' id="freeCells"></span></p>
-            <input type='number' class = 'form' id='wasteland' name="wasteland" value="wasteland"></input>
-            <input type="button"class='submit' onclick="building(wasteland)" value= "Исследовать новые земли"></input>
+            <div class="building-content">
+              <div class="building-text">
+                <p>Пустая Ячейка Здания (ЯЗ). Стоимость исследования новой = 500 + общее кол-во ЯЗ * 100 монет, и 20 * общее кол-во ЯЗ солдат</p>
+                <p>Пустырей: <span  class='countBuildings' id="freeCells"></span></p>
+              </div>
+              <div class="building-form">
+                <input type='number' class = 'form' id='wasteland' name="wasteland" value="wasteland"></input>
+                <input type="button"class='submit' onclick="building(wasteland)" value= "Исследовать"></input>
+              </div>
+            </div>
           </div>
           <div class="break"></div>
           <input type="button" onclick="updateStat()" value = 'Обновить данные'></input>
           <input type="button" onclick="nextTurn()" value = 'Следующий ход'></input>
-        </form>
       </div>
       <div class='rightColumn'>
-        <form class='recruit' name='recruit'>
+        <div class='building' name='recruit'>
           <img src='image/warrior.png' alt='Солдат' class='icon'>
-          <p> Солдат: <span class='countSolders' id='countWarriors'></span></p>
-          <input type='number' class='form' id = 'infantryman'  name = 'infantryman'  value='infantryman'></input>
-          <input type='button' class='submit' onclick="recruitment(infantryman)" value='Нанять солдат'></input>
-        </form>
+          <div class="building-content">
+            <div class="building-text">
+              <p>Нужен для исследования новых ЯЗ. Потребляет 5 монет в ход.</p>
+              <p> Солдат: <span class='countSolders' id='countWarriors'></span></p>
+            </div>
+            <div class="building-form">
+              <input type='number' class='form' id = 'infantryman'  name = 'infantryman'  value='infantryman'></input>
+              <input type='button' class='submit' onclick="recruitment(infantryman)" value='Нанять солдат'></input>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
