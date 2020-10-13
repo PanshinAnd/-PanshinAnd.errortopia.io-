@@ -64,16 +64,19 @@ function defaultBuldingCost() {
   return 100;
 }
 function researchCostMoney(){
-  return 500 + wasteland.countBuildings * 100;
+  return 500 + totalBuildingsCells() * 100;
 }
 function researchCostSolders(){
-  return 20 + wasteland.countBuildings;
+  return 20 + totalBuildingsCells();
 }
 function freeCells() {
   return constructionCells - totalBuildings();
 }
 function totalBuildings() {
   return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings + house.countBuildings;
+}
+function totalBuildingsCells() {
+  return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings + house.countBuildings + wasteland.countBuildings;
 }
 function jobless(){
   let jobless = civils() - sumWorkplaces();
@@ -235,12 +238,20 @@ function nextTurn() {
 }
 
 function research(countBuildings){
+  console.log(researchCostMoney());
+  console.log(researchCostSolders());
   while(countBuildings >= 1){
-    if(money >= researchCostMoney() && infantryman.countUnits >= researchCostSolders()){
-      money -= researchCostMoney();
-      infantryman.countUnits -= researchCostSolders();
-      researchingCells++;
-      countBuildings--;
+    if(money >= researchCostMoney()){
+      if (infantryman.countUnits >= researchCostSolders()){
+        money -= researchCostMoney();
+        infantryman.countUnits -= researchCostSolders();
+        researchingCells++;
+        countBuildings--;
+      }
+      else{
+        alert("Недостаточно солдат на исследование");
+        break;
+      }
     }
     else{
       alert("Недостаточно денег на исследование");
@@ -255,6 +266,7 @@ function  building(build){
   buildName = build.name;
   if (buildName == "wasteland"){
     research(countBuildings);
+    return;
   }
   if (countBuildings < 1){
     alert("Нужно возвести хотя бы одну постройку");
