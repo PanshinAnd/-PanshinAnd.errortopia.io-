@@ -64,10 +64,10 @@ function defaultBuldingCost() {
   return 100;
 }
 function researchCostMoney(){
-  return 500 + totalBuildingsCells() * 100;
+  return 500 + totalBuildingsCells() * 10;
 }
 function researchCostSolders(){
-  return 20 + totalBuildingsCells();
+  return 2 + totalBuildingsCells();
 }
 function freeCells() {
   return constructionCells - totalBuildings();
