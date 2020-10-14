@@ -64,6 +64,7 @@
                 <form action="main.js" name ="form">
                   <input type='number' class = 'form' id='farm' name="farm" value="farm"></input>
                   <input type="button" class='submit' onclick="building(farm)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(farm);}" value= "Снести"></input>
                 </form>
               </div>
             </div>
@@ -80,6 +81,7 @@
                 <form action="main.js" name ="form">
                   <input type='number'class = 'form' id='bank' name="bank" value="bank"></input>
                   <input type="button" class='submit' onclick="building(bank)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(bank);}" value= "Снести"></input>
                 </form>
               </div>
             </div>
@@ -96,6 +98,7 @@
                 <form action="main.js" name ="form">
                   <input type='number'class = 'form' id='barn' name="barn" value="barn"></input>
                   <input type="button" class='submit' onclick="building(barn)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(barn);}" value= "Снести"></input>
                 </form>
               </div>
             </div>
@@ -112,6 +115,7 @@
                 <form action="main.js" name ="form">
                   <input type='number'class = 'form' id='barracks' name="barracks" value="barracks"></input>
                   <input type="button" class='submit'onclick="building(barracks)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(barracks);}" value= "Снести"></input>
                 </form>
               </div>
             </div>
@@ -128,6 +132,7 @@
                 <form action="main.js" name ="form">
                   <input type='number' class = 'form' id='house' name="house" value="house"></input>
                   <input type="button"class='submit' onclick="building(house)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(house);}" value= "Снести"></input>
                 </form>
               </div>
             </div>

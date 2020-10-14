@@ -258,10 +258,13 @@ function research(countBuildings){
       break;
     }
   }
+  if (researchingCells > 0){
+    alert("Исследовано " + researchingCells  + " ячеек");
+  }
 }
 
 function  building(build){
-  console.log(build)
+  console.log(build);
   countBuildings = build.value;
   buildName = build.name;
   if (buildName == "wasteland"){
@@ -298,6 +301,22 @@ function  building(build){
     alert("Недостаточно денег для постройки");
   }
 }
+function demolition(build) {
+  console.log(build);
+  let countBuildings = Number(build.value);
+  buildName = build.name;
+  if (countBuildings < 1){
+    alert("Невозможно снести меньше одной постройки");
+    return;
+  }
+  let input = document.getElementById(buildName).value;
+  while(countBuildings >= 1 && eval(buildName).countBuildings >= 1){
+    eval(buildName).countBuildings--;
+    countBuildings --;
+    wasteland.countBuildings++;
+  }
+  updateStat();
+}
 
 
 function recruitment(recruit){
@@ -310,13 +329,13 @@ function recruitment(recruit){
     if(eval(recruitName).countUnits + countRecruits <= countSoldersStatTurn + barracks.income()){
       if (money >= (countRecruits * eval(recruitName).costHiring)){
         eval(recruitName).countUnits += countRecruits;
+        money -= countRecruits * infantryman.costHiring;
+        console.log(eval(recruitName).countUnits);
+        updateStat();
       }
       else{
         alert("Вы хотите обучить больше воинов, чем может позволить ваш бюджет");
       }
-      money -= countRecruits * infantryman.costHiring;
-      console.log(eval(recruitName).countUnits);
-      updateStat();
     }
     else {
       alert("Вы хотите обучить больше юнитов, чем это могут сделать казармы");
