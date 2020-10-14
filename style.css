@@ -67,7 +67,7 @@
   max-width: 280px;
 }
 .building-form{
-
+  margin-bottom: 20px;
 }
 .solder{
   margin-bottom: 20px;
@@ -85,4 +85,7 @@
 .submit {
   height: 34px;
   width: 140px;
+}
+.turn {
+  margin-top: 50px;
 }

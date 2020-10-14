@@ -37,11 +37,11 @@ class Building {
     return this.countLivingPlaces * this.countBuildings;
   }
 }
-const populationGrowth = 0.02, initialFoodLimit = 10000;
+const populationGrowth = 0.02;
 let constructionCells = 50;
 let population = 100;
 let money = 400;
-let food = 130, foodLimit = initialFoodLimit;
+let food = 130;
 let currentTurn = 0;
 let balanceFood, balancePopulation, balanceFoodLimit = 0;
 let balanceMoney = 0;
@@ -56,6 +56,12 @@ let wasteland = new Building("food", 0.05, 0,  15,    constructionCells,   0);
 let infantryman = new Solder('infantryman',5,5,1,0);
 wasteland.cost = researchCostMoney();
 let countSoldersStatTurn = infantryman.countUnits;
+
+let foodLimit = initialFoodLimit();
+function initialFoodLimit(){
+  //Каждая ячейка пустыря прибавляет 200 к лимиту еды
+  return wasteland.countBuildings * 200;
+}
 
 function civils(){
   return population - infantryman.countUnits;
@@ -96,7 +102,7 @@ function balanceAccrual(){
   livingPlaces = livingPlaces + sumLivingPlaces();
 
   balanceFood = Math.floor(farm.income() + (wasteland.income()) - population);
-  foodLimit = barn.income() + initialFoodLimit;
+  foodLimit = barn.income() + initialFoodLimit();
 
   if ((food + balanceFood) > foodLimit)
     balanceFood = foodLimit - food;
@@ -213,6 +219,16 @@ function updateStat(){
     td = document.getElementById('countWarriors');
     td.innerHTML = infantryman.countUnits;
 
+    //Доступные солдаты, постройки и пустыри
+    td = document.getElementById('SoldiersAvailable');
+    td.innerHTML = Math.floor(Math.min(barracks.income(), (money/infantryman.costHiring)));
+
+    td = document.getElementById('WastelandAvailable');
+    td.innerHTML = Math.floor(Math.min((money/researchCostMoney()),(infantryman.countUnits/researchCostSolders())));
+
+    td = document.getElementById('BuildingAvailable');
+    td.innerHTML = Math.floor(Math.min(money/defaultBuldingCost(), wasteland.countBuildings));
+
 }
 function nextTurn() {
   //вычисляю баланс ресурсов
@@ -261,6 +277,7 @@ function research(countBuildings){
   if (researchingCells > 0){
     alert("Исследовано " + researchingCells  + " ячеек");
   }
+  updateStat();
 }
 
 function  building(build){
