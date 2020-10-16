@@ -2,55 +2,193 @@
 <html lang="ru" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Тестовое</title>
+    <title>Errortopia</title>
     <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
+    <script type='module' src="main.js"></script>
     </style>
   </head>
   <body>
     <div class="strict">
-      <!--В этом div я буду строго следовать заданию -->
-      <div class="stat">
-        <table>
-          <tr>
-            <td>Жители</td>
-            <td>Деньги</td>
-            <td>Еда</td>
-            <td>Фермы</td>
-            <td>Банки</td>
-            <td>Рабочие места</td>
-            <td>Эффективность построек</td>
-            <td>Текущий ход </td>
-          </tr>
-          <tr>
-            <td id="population"></td>
-            <td id='money'></td>
-            <td id='food'></td>
-            <td id='farm'></td>
-            <td id='bank'></td>
-            <td id="workplaces"></td>
-            <td id='buildEfficiency'></td>
-            <td id='currentTurn'></td>
-          </tr>
-        </table>
+      <div class = "container table">
+        <div class = 'column'>
+          <div class = 'block item'>Жители</div>
+          <div class = 'block item' id = 'population'></div>
+        </div>
+        <div class = 'column'>
+          <div class = 'block item'>Деньги</div>
+          <div class = 'block item' id = 'money'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Еда</div>
+          <div class = 'block' id = 'food'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Жилые места</div>
+          <div class = 'block' id = 'livingPlaces'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block item'>Гражданские</div>
+          <div class = 'block item' id = 'civils'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block item'>Безработные</div>
+          <div class = 'block item' id = 'jobless'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Ячейки зданий</div>
+          <div class = 'block' id = 'constructionCell'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Рабочие места</div>
+          <div class = 'block' id = 'workplaces'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Эффективность построек</div>
+          <div class = 'block' id = 'buildEfficiency'></div>
+        </div>
+        <div class = 'block'>
+          <div class = 'block'>Текущий ход</div>
+          <div class = 'block' id = 'currentTurn'></div>
+        </div>
+        <div class ='break'></div>
       </div>
-      <div class='container'>
-        <form action="main.js" name ="form">
-          <p>Введите в форму ниже текущий ход и количество ферм, которые вы строите.</p>
-          <!--в связи с этим вопрос: зачем вводить текущий ход, если он ни на что не влияет? -->
-          <input type='number' id='farm' name="farm" value="farm"></input>
-          <input type="button" onclick="building(farm)" value= "Построить ферму"></input>
+      <div class='leftColumn'>
+        <div class="building">
+          <p>Доступно для строительства <span id='BuildingAvailable'></span> зданий</p>
+        </div>
+        <div class="break"></div>
+          <div class='building'>
+            <img src='image/farm.png' alt='Ферма' class='icon'>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Производит 70 еды в ход, 25 рабочих мест, 25 жилых мест.</p>
+                <p>Ферм: <span class='countBuildings' id='farm'></span></p>
+              </div>
+              <div class="building-form">
+                <form action="main.js" name ="form">
+                  <input type='number' class = 'form' id='farm' name="farm" value="farm"></input>
+                  <input type="button" class='submit' onclick="building(farm)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(farm);}" value= "Снести"></input>
+                </form>
+              </div>
+            </div>
+          </div>
           <div class="break"></div>
-          <input type='number' id='bank' name="bank" value="bank"></input>
-          <input type="button" onclick="building(bank)" value= "Построить банк"></input>
+          <div class='building'>
+            <img src='image/bank.png' alt='Банк' class='icon'>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Производит по 25 денег в ход, 20 рабочих мест, 5 жилых мест.</p>
+                <p>Банков: <span class='countBuildings'id='bank'></span></p>
+              </div>
+              <div class="building-form">
+                <form action="main.js" name ="form">
+                  <input type='number'class = 'form' id='bank' name="bank" value="bank"></input>
+                  <input type="button" class='submit' onclick="building(bank)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(bank);}" value= "Снести"></input>
+                </form>
+              </div>
+            </div>
+          </div>
           <div class="break"></div>
+          <div class='building'>
+            <img src='image/barn.png'  alt='Амбар' class='icon'>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Расширяет лимит на хранение еды на 5 000. Не дает рабочих мест, дает 15 жилых мест</p>
+                <p>Амбаров: <span class='countBuildings'id='barn'></span></p>
+              </div>
+              <div class="building-form">
+                <form action="main.js" name ="form">
+                  <input type='number'class = 'form' id='barn' name="barn" value="barn"></input>
+                  <input type="button" class='submit' onclick="building(barn)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(barn);}" value= "Снести"></input>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="break"></div>
+          <div class='building'>
+            <img src='image/barracks.png' alt='Казарма' class='icon'>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Позволяет нанимать солдат по 20 в ход. 25 рабочих мест, 25 жилых.</p>
+                <p>Казарм: <span class='countBuildings'id='barracks'></span></p>
+              </div>
+              <div class="building-form">
+                <form action="main.js" name ="form">
+                  <input type='number'class = 'form' id='barracks' name="barracks" value="barracks"></input>
+                  <input type="button" class='submit'onclick="building(barracks)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(barracks);}" value= "Снести"></input>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="break"></div>
+          <div class='building'>
+            <img src='image/house.png' alt='Дом' class='icon'>
+            <div class="building-content">
+              <div class='building-text'>
+                <p>Увеличивает число жилых мест по умолчанию на 50.</p>
+                <p>Домов: <span class='countBuildings'id='house'></span></p>
+              </div>
+              <div class="building-form">
+                <form action="main.js" name ="form">
+                  <input type='number' class = 'form' id='house' name="house" value="house"></input>
+                  <input type="button"class='submit' onclick="building(house)" value= "Построить"></input>
+                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(house);}" value= "Снести"></input>
+                </form>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class='rightColumn'>
+        <div class="building">
+          <p>Доступно для найма <span id='SoldiersAvailable'></span> солдат</p>
+        </div>
+        <div class="break"></div>
+        <div class='building' name='recruit'>
+          <img src='image/warrior.png' alt='Солдат' class='icon'>
+          <div class="building-content">
+            <div class="building-text">
+              <p>Нужен для исследования новых ЯЗ. Потребляет 5 монет в ход.</p>
+              <p> Солдат: <span class='countSolders' id='countWarriors'></span></p>
+            </div>
+            <div class="building-form">
+              <form action="main.js" name ="form">
+                <input type='number' class='form' id = 'infantryman'  name = 'infantryman'  value='infantryman'></input>
+                <input type='button' class='submit' onclick="recruitment(infantryman)" value='Нанять солдат'></input>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="break"></div>
+        <div class="building">
+          <p>Доступно для исследования <span id='WastelandAvailable'></span> пустырей</p>
+        </div>
+        <div class="break"></div>
+        <div class='building'>
+          <img src='image/empty.png' alt='Пустырь' class='icon'>
+          <div class="building-content">
+            <div class="building-text">
+              <p>Земля. Для постройки любого здания нужна свободная Земля.
+                 Пока Земля не занята зданием она производит 5 еды, а также повышает лимит на хранение еды на 200.</p>
+              <p>Свободных от зданий Земель: <span  class='countBuildings' id="freeCells"></span></p>
+            </div>
+            <div class="building-form">
+              <form action="main.js" name ="form">
+                <input type='number' class = 'form' id='wasteland' name="wasteland" value="wasteland"></input>
+                <input type="button"class='submit' onclick="building(wasteland)" value= "Исследовать"></input>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="break"></div>
+        <div class="turn">
           <input type="button" onclick="updateStat()" value = 'Обновить данные'></input>
           <input type="button" onclick="nextTurn()" value = 'Следующий ход'></input>
-        </form>
+        </div>
       </div>
-    </div>
-    <div class="update">
-      <!--В этом div я модифицирую задание, чтобы использовать все указанные в нем понятия -->
     </div>
   </body>
 </html>
