@@ -39,7 +39,7 @@ class Building {
 }
 const populationGrowth = 0.02;
 let constructionCells = 50;
-let population = 100;
+let population = 200;
 let money = 400;
 let food = 130;
 let currentTurn = 0;
