@@ -1,42 +1,8 @@
-class Solder{
-  constructor(name, costHiring, costMaintеnanceMoney, costMaintеnanceFood, countUnits){
-    this.name = name;
-    this.costHiring = costHiring;
-    this.costMaintеnanceMoney = costMaintеnanceMoney;
-    this.costMaintеnanceFood  = costMaintеnanceFood;
-    this.countUnits = countUnits;
-  }
-  totalMaintеnanceMoney(){
-    return this.costMaintеnanceMoney * this.countUnits;
-  }
-  totalMaintеnanceFood(){
-    return this.costMaintеnanceFood * this.countUnits;
-  }
-}
-class Building {
-  constructor(typeRes, countRes, countWorkplaces, countLivingPlaces, countBuildings,  cost) {
-    this.typeRes = typeRes;
-    this.countRes = countRes;
-    this.countWorkplaces = countWorkplaces;
-    this.countLivingPlaces = countLivingPlaces;
-    this.countBuildings = countBuildings;
-    this.cost = cost;
-  }
-  income(){
-    if (this.countWorkplaces > 0){
-        return this.countBuildings * this.countRes * buildEfficiency();
-    }
-    else{
-      return this.countBuildings * this.countRes * 100;
-    }
-  }
-  totalWorkplaces(){
-    return this.countWorkplaces * this.countBuildings;
-  }
-  totalLivingPlaces(){
-    return this.countLivingPlaces * this.countBuildings;
-  }
-}
+import {Building} from './building.js';
+import {Solder} from './Solder.js';
+import { initialFoodLimit, civils, defaultBuldingCost,researchCostMoney, researchCostSolders, freeCells, totalBuildingsCells, jobless, buildEfficiency, sumWorkplaces } from './utilities.js';
+
+
 const populationGrowth = 0.02;
 let constructionCells = 50;
 let population = 200;
@@ -47,51 +13,21 @@ let balanceFood, balancePopulation, balanceFoodLimit = 0;
 let balanceMoney = 0;
 let researchingCells = 0;
 
-let farm = new Building("food",         0.7,  25, 25, 0,   defaultBuldingCost());
-let bank = new Building("money",        0.25, 20, 5,  0,   defaultBuldingCost());
-let barn = new Building("foodLimit",    50,   0, 15, 0,   defaultBuldingCost());
-let barracks = new Building("infantryman",  0.2,  25, 25, 0,   defaultBuldingCost());
-let house = new Building("empty",       0,    0,  50, 0,   defaultBuldingCost());
-let wasteland = new Building("food", 0.05, 0,  15,    constructionCells,   0);
+let buildings = [];
+
+ buildings.push(farm = new Building("food",            0.7,  25, 25, 0,   defaultBuldingCost()));
+ buildings.push(bank = new Building("money",           0.25, 20, 5,  0,   defaultBuldingCost()));
+ buildings.push(barn = new Building("foodLimit",       50,   0,  15, 0,   defaultBuldingCost()));
+ buildings.push(barracks = new Building("infantryman", 0.2,  25, 25, 0,   defaultBuldingCost()));
+ buildings.push(house = new Building("empty",          0,    0,  50, 0,   defaultBuldingCost()));
+ buildings.push(wasteland = new Building("food", 0.05, 0,  15,    constructionCells,   0));
 let infantryman = new Solder('infantryman',5,5,1,0);
 wasteland.cost = researchCostMoney();
-let countSoldersStatTurn = infantryman.countUnits;
+export {buildings};
+
+let countSoldersStartTurn = infantryman.countUnits;
 
 let foodLimit = initialFoodLimit();
-function initialFoodLimit(){
-  //Каждая ячейка пустыря прибавляет 200 к лимиту еды
-  return wasteland.countBuildings * 200;
-}
-
-function civils(){
-  return population - infantryman.countUnits;
-}
-function defaultBuldingCost() {
-  return 100;
-}
-function researchCostMoney(){
-  return 500 + totalBuildingsCells() * 10;
-}
-function researchCostSolders(){
-  return 2 + totalBuildingsCells();
-}
-function freeCells() {
-  return constructionCells - totalBuildings();
-}
-function totalBuildings() {
-  return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings + house.countBuildings;
-}
-function totalBuildingsCells() {
-  return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings + house.countBuildings + wasteland.countBuildings;
-}
-function jobless(){
-  let jobless = civils() - sumWorkplaces();
-  if (jobless < 0){
-    jobless = 0;
-  }
-  return jobless;
-}
-
 function balanceAccrual(){
   balanceMoney = 0;
   balanceMoney -= infantryman.totalMaintеnanceMoney();
@@ -119,27 +55,6 @@ function balanceAccrual(){
   if (balanceFood >= 0 && (food+balanceFood) < (population + balancePopulation) && (farm.income() < population)){
     balancePopulation = (food + balanceFood) - (population + balancePopulation);
   }
-}
-
-function buildEfficiency(){
-  let td;
-  let result;
-  td = document.getElementById("buildEfficiency");
-  if (sumWorkplaces() <= civils()){
-    result = 100;
-    td.innerHTML = result;
-      return result;
-  }
- else{
-    let result = civils() / sumWorkplaces();
-    result = result * 100;
-    result = result.toFixed(2);
-    td.innerHTML = result;
-    return result;
-  }
-}
-function sumWorkplaces(){
-  return farm.totalWorkplaces() + bank.totalWorkplaces() + barn.totalWorkplaces() + barracks.totalWorkplaces();
 }
 function sumLivingPlaces(){
   return farm.totalLivingPlaces() + bank.totalLivingPlaces() + barn.totalLivingPlaces() + barracks.totalLivingPlaces() + house.totalLivingPlaces() + wasteland.totalLivingPlaces();
@@ -195,6 +110,9 @@ function updateStat(){
     td = document.getElementById('workplaces');
     td.innerHTML = sumWorkplaces();
 
+    td = document.getElementById("buildEfficiency");
+    td.innerHTML = buildEfficiency();
+
     td = document.getElementById('currentTurn');
     td.innerHTML = currentTurn;
 
@@ -249,7 +167,7 @@ function nextTurn() {
   }
 
   currentTurn ++;
-  countSoldersStatTurn = infantryman.countUnits;
+  countSoldersStartTurn = infantryman.countUnits;
   updateStat();
 }
 
@@ -343,7 +261,7 @@ function recruitment(recruit){
   if (countRecruits <= barracks.income()){
     //Костыль, предотвращающий найм большего числа юнитов, чем могут позволить казармы
     //путем найма несколько раз за один ход небольшго числа солдат
-    if(eval(recruitName).countUnits + countRecruits <= countSoldersStatTurn + barracks.income()){
+    if(eval(recruitName).countUnits + countRecruits <= countSoldersStartTurn + barracks.income()){
       if (money >= (countRecruits * eval(recruitName).costHiring)){
         eval(recruitName).countUnits += countRecruits;
         money -= countRecruits * infantryman.costHiring;
