@@ -39,7 +39,7 @@ class Building {
 }
 const populationGrowth = 0.02;
 let constructionCells = 50;
-let population = 100;
+let population = 200;
 let money = 400;
 let food = 130;
 let currentTurn = 0;
@@ -117,8 +117,11 @@ function balanceAccrual(){
   //Еды с учетом прироста не хватает на население с учетом прироста, то
   //баланс населения равен разнице между едой (с уч.прироста) и популяцией (с уч.прироста)
   if (balanceFood >= 0 && (food+balanceFood) < (population + balancePopulation) && (farm.income() < population)){
-    balancePopulation = (food + balanceFood) - (population + balancePopulation);
+    balancePopulation = (food + balanceFood) - population;
   }
+  //
+  if (food+balanceFood == population + balancePopulation)
+    balanceFood = food * (-1);
 }
 
 function buildEfficiency(){
