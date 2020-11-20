@@ -1,3 +1,45 @@
+class FoodManagment {
+  constructor(meet,corn,fruits, bread){
+    this.meet = meet;
+    this.corn = corn;
+    this.fruits = fruits;
+    this.bread = bread;
+  }
+  sumFood(){
+    let result = this.meet + this.corn + this.fruits + this.bread;
+    return result;
+  }
+  countRes(){
+    return 4;
+  }
+  resourcesAvailable(){
+    let i = 0;
+    if (this.meet > 0)
+    i++;
+    if (this.corn > 0)
+    i++;
+    if (this.fruits > 0)
+    i++;
+    if (this.bread > 0)
+    i++;
+    return i;
+  }
+  minRes(){
+    function minimum (a, b){
+      if (a < b)
+        return a;
+      else
+      return b;
+    }
+    return minimum(minimum(meet,corn), minimum(fruits, bread));
+  }
+  consumption(consumptionRate){
+    this.meet -= consumptionRate;
+    this.corn -= consumptionRate;
+    this.fruits -= consumptionRate;
+    this.bread -= consumptionRate;
+  }
+}
 class Solder{
   constructor(name, costHiring, costMaintеnanceMoney, costMaintеnanceFood, countUnits){
     this.name = name;
@@ -41,19 +83,22 @@ const populationGrowth = 0.02;
 let constructionCells = 50;
 let population = 200;
 let money = 400;
-let food = 130;
 let currentTurn = 0;
 let balanceFood, balancePopulation, balanceFoodLimit = 0;
 let balanceMoney = 0;
 let researchingCells = 0;
 
-let farm = new Building("food",         0.7,  25, 25, 0,   defaultBuldingCost());
+let farm = new Building("corn",         1.5,  25, 25, 0,   defaultBuldingCost());
 let bank = new Building("money",        0.25, 20, 5,  0,   defaultBuldingCost());
-let barn = new Building("foodLimit",    50,   0, 15, 0,   defaultBuldingCost());
-let barracks = new Building("infantryman",  0.2,  25, 25, 0,   defaultBuldingCost());
+let barn = new Building("foodLimit",    50,   0,  15, 0,   defaultBuldingCost());
+let barracks = new Building("infantryman",0.2,25, 25, 0,   defaultBuldingCost());
 let house = new Building("empty",       0,    0,  50, 0,   defaultBuldingCost());
-let wasteland = new Building("food", 0.05, 0,  15,    constructionCells,   0);
+let wasteland = new Building("meet",   0.05,  0,  15,    constructionCells,   0);
+let pasture = new Building("meet",     0.7,   20, 20, 0,   defaultBuldingCost());
+let garden = new Building("fruits",    1,     10, 5,  0,   defaultBuldingCost());
+
 let infantryman = new Solder('infantryman',5,5,1,0);
+let food = new FoodManagment(50, 40, 40, 40);
 wasteland.cost = researchCostMoney();
 let countSoldersStatTurn = infantryman.countUnits;
 
@@ -102,12 +147,12 @@ function balanceAccrual(){
   livingPlaces = livingPlaces + sumLivingPlaces();
 
   balanceFood = Math.floor(farm.income() + (wasteland.income()) - population);
-  foodLimit = barn.income() + initialFoodLimit();
+  foodLimit = farm.income() + initialFoodLimit();
 
-  if ((food + balanceFood) > foodLimit)
-    balanceFood = foodLimit - food;
+  if ((food.sumFood() + balanceFood) > foodLimit)
+    balanceFood = foodLimit - food.sumFood();
   balancePopulation = Math.floor(population * populationGrowth);
-  if(food == 0){
+  if(food.sumFood() == 0){
     balancePopulation = 0;
   }
   if((population + balancePopulation) > sumLivingPlaces()){
@@ -116,13 +161,38 @@ function balanceAccrual(){
   //Если прирост еды положительный, и
   //Еды с учетом прироста не хватает на население с учетом прироста, то
   //баланс населения равен разнице между едой (с уч.прироста) и популяцией (с уч.прироста)
-  if (balanceFood >= 0 && (food+balanceFood) < (population + balancePopulation) && (farm.income() < population)){
-    balancePopulation = (food + balanceFood) - population;
+  if (balanceFood >= 0 && (food.sumFood() + balanceFood) < (population + balancePopulation) && (farm.income() < population)){
+    balancePopulation = (food.sumFood() + balanceFood) - population;
   }
-  //
-  if (food+balanceFood == population + balancePopulation)
-    balanceFood = food * (-1);
+  // Если еды (с уч.прироста) хватает ровно на то, чтобы прокормить население (с уч.прироста)
+  // То вся еда тратится
+  if (food.sumFood() + balanceFood == population + balancePopulation)
+    balanceFood = food.sumFood() * (-1);
 }
+function foodConsumption() {
+  //Считаю потребление еды с учетом разбиения ее на отдельные ресурсы (мясо, зерно и пр.)
+  /*Смотрим сколько ресурсов больше 0.
+  Делим население на число ресурсов - столько и есть норма потребления для каждого ресурса.
+  Если не хватает, то вычитаем население, которое было уже накормлено по такой пропорции и возвращаемся к 1 шагу */
+  let hungry = population + balancePopulation;
+  let consumptionRate = Math.floor(hungry / food.resourcesAvailable()); //норма потребления
+  console.log(consumptionRate);
+  while(consumptionRate > 0){
+    //сейчас из каждого ресурса вычитаю эту норму потребления
+    //если ресов каждого типа достаточно, то просто вычитаю норму потребления - население накормлено
+    if (consumptionRate <= food.minRes()){
+      food.consumption(consumptionRate);
+      consumptionRate = 0;
+      }
+      //иначе вычитаю норму, равную минимальному ресурсу, а затем пересчитываю норму потребления
+      else {
+        hungry -= food.minRes() * food.resourcesAvailable();
+        food.consumption(food.minRes());
+        consumptionRate = Math.floor(hungry / food.resourcesAvailable());
+      }
+  }
+}//Проблема вот в чем: если у нас осталось 2 голодных и 3 ресурса. Каков будет результат работы функции?
+
 
 function buildEfficiency(){
   let td;
@@ -171,7 +241,8 @@ function updateStat(){
     }
 
     td = document.getElementById('food');
-    td.innerHTML = food;
+    td.innerHTML = food.sumFood();
+    console.log(food.sumFood());
     if(balanceFood >= 0){
       td.innerHTML += ' + ';
       td.innerHTML += Math.floor(balanceFood);
@@ -236,12 +307,12 @@ function updateStat(){
 function nextTurn() {
   //вычисляю баланс ресурсов
   money += Math.floor(balanceMoney);
-  food += balanceFood;
+  //food += balanceFood;
   population += balancePopulation;
 
   if(food < 0){
     population += food;
-    food = 0;
+    food.sumFood() = 0;
   }
   wasteland.countBuildings += researchingCells;
   constructionCells += researchingCells;
