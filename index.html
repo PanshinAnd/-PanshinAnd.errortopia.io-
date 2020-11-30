@@ -4,11 +4,10 @@
     <meta charset="utf-8">
     <title>Errortopia</title>
     <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
-    </style>
+    <script type='module' src="main.js"></script>
   </head>
   <body>
-    <div class="strict">
+    <div>
       <div class = "container table">
         <div class = 'column'>
           <div class = 'block item'>Жители</div>
@@ -52,141 +51,13 @@
         </div>
         <div class ='break'></div>
       </div>
-      <div class='leftColumn'>
-        <div class="building">
-          <p>Доступно для строительства <span id='BuildingAvailable'></span> зданий</p>
-        </div>
-        <div class="break"></div>
-          <div class='building'>
-            <img src='image/farm.png' alt='Ферма' class='icon'>
-            <div class="building-content">
-              <div class='building-text'>
-                <p>Производит 70 еды в ход, 25 рабочих мест, 25 жилых мест.</p>
-                <p>Ферм: <span class='countBuildings' id='farm'></span></p>
-              </div>
-              <div class="building-form">
-                <form action="main.js" name ="form">
-                  <input type='number' class = 'form' id='farm' name="farm" value="farm"></input>
-                  <input type="button" class='submit' onclick="building(farm)" value= "Построить"></input>
-                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(farm);}" value= "Снести"></input>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="break"></div>
-          <div class='building'>
-            <img src='image/bank.png' alt='Банк' class='icon'>
-            <div class="building-content">
-              <div class='building-text'>
-                <p>Производит по 25 денег в ход, 20 рабочих мест, 5 жилых мест.</p>
-                <p>Банков: <span class='countBuildings'id='bank'></span></p>
-              </div>
-              <div class="building-form">
-                <form action="main.js" name ="form">
-                  <input type='number'class = 'form' id='bank' name="bank" value="bank"></input>
-                  <input type="button" class='submit' onclick="building(bank)" value= "Построить"></input>
-                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(bank);}" value= "Снести"></input>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="break"></div>
-          <div class='building'>
-            <img src='image/barn.png'  alt='Амбар' class='icon'>
-            <div class="building-content">
-              <div class='building-text'>
-                <p>Расширяет лимит на хранение еды на 5 000. Не дает рабочих мест, дает 15 жилых мест</p>
-                <p>Амбаров: <span class='countBuildings'id='barn'></span></p>
-              </div>
-              <div class="building-form">
-                <form action="main.js" name ="form">
-                  <input type='number'class = 'form' id='barn' name="barn" value="barn"></input>
-                  <input type="button" class='submit' onclick="building(barn)" value= "Построить"></input>
-                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(barn);}" value= "Снести"></input>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="break"></div>
-          <div class='building'>
-            <img src='image/barracks.png' alt='Казарма' class='icon'>
-            <div class="building-content">
-              <div class='building-text'>
-                <p>Позволяет нанимать солдат по 20 в ход. 25 рабочих мест, 25 жилых.</p>
-                <p>Казарм: <span class='countBuildings'id='barracks'></span></p>
-              </div>
-              <div class="building-form">
-                <form action="main.js" name ="form">
-                  <input type='number'class = 'form' id='barracks' name="barracks" value="barracks"></input>
-                  <input type="button" class='submit'onclick="building(barracks)" value= "Построить"></input>
-                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(barracks);}" value= "Снести"></input>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="break"></div>
-          <div class='building'>
-            <img src='image/house.png' alt='Дом' class='icon'>
-            <div class="building-content">
-              <div class='building-text'>
-                <p>Увеличивает число жилых мест по умолчанию на 50.</p>
-                <p>Домов: <span class='countBuildings'id='house'></span></p>
-              </div>
-              <div class="building-form">
-                <form action="main.js" name ="form">
-                  <input type='number' class = 'form' id='house' name="house" value="house"></input>
-                  <input type="button"class='submit' onclick="building(house)" value= "Построить"></input>
-                  <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(house);}" value= "Снести"></input>
-                </form>
-              </div>
-            </div>
-          </div>
-      </div>
-      <div class='rightColumn'>
-        <div class="building">
-          <p>Доступно для найма <span id='SoldiersAvailable'></span> солдат</p>
-        </div>
-        <div class="break"></div>
-        <div class='building' name='recruit'>
-          <img src='image/warrior.png' alt='Солдат' class='icon'>
-          <div class="building-content">
-            <div class="building-text">
-              <p>Нужен для исследования новых ЯЗ. Потребляет 5 монет в ход.</p>
-              <p> Солдат: <span class='countSolders' id='countWarriors'></span></p>
-            </div>
-            <div class="building-form">
-              <form action="main.js" name ="form">
-                <input type='number' class='form' id = 'infantryman'  name = 'infantryman'  value='infantryman'></input>
-                <input type='button' class='submit' onclick="recruitment(infantryman)" value='Нанять солдат'></input>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="break"></div>
-        <div class="building">
-          <p>Доступно для исследования <span id='WastelandAvailable'></span> пустырей</p>
-        </div>
-        <div class="break"></div>
-        <div class='building'>
-          <img src='image/empty.png' alt='Пустырь' class='icon'>
-          <div class="building-content">
-            <div class="building-text">
-              <p>Пустая Ячейка Здания (ЯЗ). Стоимость исследования новой = 500 + общее кол-во ЯЗ * 100 монет, и 20 * общее кол-во ЯЗ солдат</p>
-              <p>Пустырей: <span  class='countBuildings' id="freeCells"></span></p>
-            </div>
-            <div class="building-form">
-              <form action="main.js" name ="form">
-                <input type='number' class = 'form' id='wasteland' name="wasteland" value="wasteland"></input>
-                <input type="button"class='submit' onclick="building(wasteland)" value= "Исследовать"></input>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="break"></div>
-        <div class="turn">
-          <input type="button" onclick="updateStat()" value = 'Обновить данные'></input>
-          <input type="button" onclick="nextTurn()" value = 'Следующий ход'></input>
-        </div>
+      <a href='buildings.html'>Постройки<a>
+      <a href="expansion.html">Экспансия</a>
+      <h2>Здесь будет подробная статистика по населению и ресурсам</h2>
+      <div class="break"></div>
+      <div class="turn">
+        <input type="button" onclick="updateStat()" value = 'Обновить данные'></input>
+        <input type="button" onclick="nextTurn()" value = 'Следующий ход'></input>
       </div>
     </div>
   </body>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Errortopia - постройки</title>
+  <script type='module' src="main.js"></script>
+  <script type='module' src="buildings.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class = "container table">
+    <div class = 'column'>
+      <div class = 'block item'>Жители</div>
+      <div class = 'block item' id = 'population'></div>
+    </div>
+    <div class = 'column'>
+      <div class = 'block item'>Деньги</div>
+      <div class = 'block item' id = 'money'></div>
+    </div>
+    <div class = 'block'>
+      <div class = 'block'>Еда</div>
+      <div class = 'block' id = 'food'></div>
+    </div>
+    <div class = 'block'>
+      <div class = 'block'>Жилые места</div>
+      <div class = 'block' id = 'livingPlaces'></div>
+    </div>
+    <div class = 'block'>
+      <div class = 'block item'>Гражданские</div>
+      <div class = 'block item' id = 'civils'></div>
+    </div>
+    <div class = 'block'>
+      <div class = 'block item'>Безработные</div>
+      <div class = 'block item' id = 'jobless'></div>
+    </div>
+    <div class = 'block'>
+      <div class = 'block'>Ячейки зданий</div>
+      <div class = 'block' id = 'constructionCell'></div>
+    </div>
+    <div class = 'block'>
+      <div class = 'block'>Рабочие места</div>
+      <div class = 'block' id = 'workplaces'></div>
+    </div>
+    <div class = 'block'>
+      <div class = 'block'>Эффективность построек</div>
+      <div class = 'block' id = 'buildEfficiency'></div>
+    </div>
+    <div class = 'block'>
+      <div class = 'block'>Текущий ход</div>
+      <div class = 'block' id = 'currentTurn'></div>
+    </div>
+    <div class ='break'></div>
+  </div>
+  <a href="index.html">На главную</a>
+  <div class="break"></div>
+  <table class='leftColumn'>
+    <tr>
+      <td>НАЗВАНИЕ</td>
+      <td>ФУНКЦИЯ</td>
+      <td>РАБОТА/ЖИЛЬЕ</td>
+      <td>КОЛИЧЕСТВО</td>
+      <td>Доступно построек: <span id='BuildingAvailable'></span></td>
+    </tr>
+    <tr>
+      <td>Ферма</td>
+      <td>Производит 150 пшена</td>
+      <td>25/25</td>
+      <td id='farm'></td>
+      <td><form action="buildings.js" name ="form">
+          <input type='number' class = 'form' id='farm' name="farm" value="farm"></input>
+          <input type="button" class='submit' onclick="building(farm)" value= "Построить"></input>
+          <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(farm);}" value= "Снести"></input>
+      </form></td>
+    </tr>
+    <tr>
+      <td>Пастбище</td>
+      <td>Производит 70 мяса</td>
+      <td>20/20</td>
+      <td id='pasture'></td>
+      <td><form action="buildings.js" name ="form">
+          <input type='number' class = 'form' id='pasture' name="pasture" value="pasture"></input>
+          <input type="button" class='submit' onclick="building(pasture)" value= "Построить"></input>
+          <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(pasture);}" value= "Снести"></input>
+      </form></td>
+    </tr>
+    <tr>
+      <td>Сад</td>
+      <td>Производит 100 пшена</td>
+      <td>10/5</td>
+      <td id='garden'></td>
+      <td><form action="buildings.js" name ="form">
+          <input type='number' class = 'form' id='garden' name="garden" value="garden"></input>
+          <input type="button" class='submit' onclick="building(garden)" value= "Построить"></input>
+          <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(garden);}" value= "Снести"></input>
+      </form></td>
+    </tr>
+    <tr>
+      <td>Банк</td>
+      <td>Производит 25 монет</td>
+      <td>20/5</td>
+      <td id='bank'></td>
+      <td><form action="buildings.js" name ="form">
+          <input type='number' class = 'form' id='bank' name="bank" value="bank"></input>
+          <input type="button" class='submit' onclick="building(bank)" value= "Построить"></input>
+          <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(bank);}" value= "Снести"></input>
+      </form></td>
+    </tr>
+    <tr>
+      <td>Амбар</td>
+      <td>Хранит +5000 еды</td>
+      <td>0/15</td>
+      <td id='barn'></td>
+      <td><form action="buildings.js" name ="form">
+        <input type='number'class = 'form' id='barn' name="barn" value="barn"></input>
+        <input type="button" class='submit' onclick="building(barn)" value= "Построить"></input>
+        <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(barn);}" value= "Снести"></input>
+      </form></td>
+    </tr>
+    <tr>
+      <td>Казарма</td>
+      <td>Позволяет нанимать по 20 солдат в ход</td>
+      <td>25/25</td>
+      <td id='barracks'></td>
+      <td><form action="buildings.js" name ="form">
+          <input type='number' class = 'form' id='barracks' name="barracks" value="barracks"></input>
+          <input type="button" class='submit' onclick="building(barracks)" value= "Построить"></input>
+          <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(barracks);}" value= "Снести"></input>
+      </form></td>
+    </tr>
+    <tr>
+      <td>Жилой дом</td>
+      <td>+50 жилых мест</td>
+      <td>0/50</td>
+      <td id='house'></td>
+      <td><form action="buildings.js" name ="form">
+          <input type='number' class = 'form' id='house' name="house" value="house"></input>
+          <input type="button" class='submit' onclick="building(house)" value= "Построить"></input>
+          <input type="button" class='submit' onclick="if(confirm('Вы точно хотите снести?')){demolition(house);}" value= "Снести"></input>
+      </form></td>
+    </tr>
+  </table>
+</body>
+</html>

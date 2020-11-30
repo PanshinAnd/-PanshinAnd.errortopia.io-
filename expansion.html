@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Errortopia - экспансия</title>
+  <script type='module' src="expansion.js"></script>
+  <script type='module' src="main.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="strict">
+    <div class = "container table">
+      <div class = 'column'>
+        <div class = 'block item'>Жители</div>
+        <div class = 'block item' id = 'population'></div>
+      </div>
+      <div class = 'column'>
+        <div class = 'block item'>Деньги</div>
+        <div class = 'block item' id = 'money'></div>
+      </div>
+      <div class = 'block'>
+        <div class = 'block'>Еда</div>
+        <div class = 'block' id = 'food'></div>
+      </div>
+      <div class = 'block'>
+        <div class = 'block'>Жилые места</div>
+        <div class = 'block' id = 'livingPlaces'></div>
+      </div>
+      <div class = 'block'>
+        <div class = 'block item'>Гражданские</div>
+        <div class = 'block item' id = 'civils'></div>
+      </div>
+      <div class = 'block'>
+        <div class = 'block item'>Безработные</div>
+        <div class = 'block item' id = 'jobless'></div>
+      </div>
+      <div class = 'block'>
+        <div class = 'block'>Ячейки зданий</div>
+        <div class = 'block' id = 'constructionCell'></div>
+      </div>
+      <div class = 'block'>
+        <div class = 'block'>Рабочие места</div>
+        <div class = 'block' id = 'workplaces'></div>
+      </div>
+      <div class = 'block'>
+        <div class = 'block'>Эффективность построек</div>
+        <div class = 'block' id = 'buildEfficiency'></div>
+      </div>
+      <div class = 'block'>
+        <div class = 'block'>Текущий ход</div>
+        <div class = 'block' id = 'currentTurn'></div>
+      </div>
+        <div class ='break'></div>
+    </div>
+      <a href="index.html">На главную</a>
+      <div class="break"></div>
+  </div>
+      <div class="break"></div>
+      <div class='leftColumn'>
+        <div class="building">
+          <p>Доступно для найма <span id='SoldiersAvailable'></span> солдат</p>
+        </div>
+        <div class="break"></div>
+        <div class='building' name='recruit'>
+          <img src='image/warrior.png' alt='Солдат' class='icon'>
+          <div class="building-content">
+            <div class="building-text">
+              <p>Нужен для исследования новых ЯЗ. Потребляет 5 монет в ход.</p>
+              <p> Солдат: <span class='countSolders' id='countWarriors'></span></p>
+            </div>
+            <div class="building-form">
+              <form action="expansion.js" name ="form">
+                <input type='number' class='form' id = 'infantryman'  name = 'infantryman'  value='infantryman'></input>
+                <input type='button' class='submit' onclick="recruitment(infantryman)" value='Нанять солдат'></input>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="break"></div>
+        <div class="building">
+          <p>Доступно для исследования <span id='WastelandAvailable'></span> пустырей</p>
+        </div>
+        <div class="break"></div>
+        <div class='building'>
+          <img src='image/empty.png' alt='Пустырь' class='icon'>
+          <div class="building-content">
+            <div class="building-text">
+              <p>Пустая Ячейка Здания (ЯЗ). Стоимость исследования новой = 500 + общее кол-во ЯЗ * 100 монет, и 20 * общее кол-во ЯЗ солдат</p>
+              <p>Пустырей: <span  class='countBuildings' id="freeCells"></span></p>
+            </div>
+            <div class="building-form">
+              <form action="expansion.js" name ="form">
+                <input type='number' class = 'form' id='wasteland' name="wasteland"></input>
+                <input type="button"class='submit' onclick="research(wasteland)" value= "Исследовать"></input>
+              </form>
+            </div>
+          </div>
+</body>
+</html>

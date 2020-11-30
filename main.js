@@ -1,3 +1,12 @@
+// TODO:
+// * Отредактировать функцию balanceAccrual() так, чтобы она считала доходы по всем типам еды
+
+class ResourceManagment {
+  constructor (alcohol, money){
+    this.alcohol = alcohol;
+    this.money = money;
+  }
+}
 class FoodManagment {
   constructor(meet,corn,fruits, bread){
     this.meet = meet;
@@ -39,6 +48,22 @@ class FoodManagment {
     this.fruits -= consumptionRate;
     this.bread -= consumptionRate;
   }
+  limit (){
+    return barn.income() + initialFoodLimit();
+  }
+  meetIncome(){
+    return wasteland.income() + pasture.income();
+  }
+  cornIncome(){
+    return farm.income();
+  }
+  fruitsIncome(){
+    return garden.income();
+  }
+  allIncome(){
+    //инкам всех производящих зданий, не зависит от типа еды. Нужен, чтобы посчитать баланс
+    return farm.income() + wasteland.income() + pasture.income() + garden.income();
+  }
 }
 class Solder{
   constructor(name, costHiring, costMaintеnanceMoney, costMaintеnanceFood, countUnits){
@@ -79,30 +104,31 @@ class Building {
     return this.countLivingPlaces * this.countBuildings;
   }
 }
+export let researchingCells = 0;
+
 const populationGrowth = 0.02;
 let constructionCells = 50;
 let population = 200;
-let money = 400;
 let currentTurn = 0;
-let balanceFood, balancePopulation, balanceFoodLimit = 0;
+let balancePopulation, balanceFoodLimit = 0;
 let balanceMoney = 0;
-let researchingCells = 0;
 
-let farm = new Building("corn",         1.5,  25, 25, 0,   defaultBuldingCost());
-let bank = new Building("money",        0.25, 20, 5,  0,   defaultBuldingCost());
-let barn = new Building("foodLimit",    50,   0,  15, 0,   defaultBuldingCost());
-let barracks = new Building("infantryman",0.2,25, 25, 0,   defaultBuldingCost());
-let house = new Building("empty",       0,    0,  50, 0,   defaultBuldingCost());
-let wasteland = new Building("meet",   0.05,  0,  15,    constructionCells,   0);
-let pasture = new Building("meet",     0.7,   20, 20, 0,   defaultBuldingCost());
-let garden = new Building("fruits",    1,     10, 5,  0,   defaultBuldingCost());
-
-let infantryman = new Solder('infantryman',5,5,1,0);
 let food = new FoodManagment(50, 40, 40, 40);
+export let resources = new ResourceManagment(0, 400);
+
+export let farm = new Building("corn",         1.5,  25, 25, 0,   defaultBuldingCost());
+export let bank = new Building("money",        0.25, 20, 5,  0,   defaultBuldingCost());
+export let barn = new Building("foodLimit",    50,   0,  15, 0,   defaultBuldingCost());
+export let house = new Building("empty",       0,    0,  50, 0,   defaultBuldingCost());
+export let pasture = new Building("meet",     0.7,   20, 20, 0,   defaultBuldingCost());
+export let garden = new Building("fruits",    1,     10, 5,  0,   defaultBuldingCost());
+export let barracks = new Building("infantryman",0.2,25, 25, 0,   defaultBuldingCost());
+export let wasteland = new Building("meet",   0.05,  0,  15,    constructionCells,   0);
+export let infantryman = new Solder('infantryman',5,5,1,0);
+
 wasteland.cost = researchCostMoney();
 let countSoldersStatTurn = infantryman.countUnits;
 
-let foodLimit = initialFoodLimit();
 function initialFoodLimit(){
   //Каждая ячейка пустыря прибавляет 200 к лимиту еды
   return wasteland.countBuildings * 200;
@@ -111,22 +137,19 @@ function initialFoodLimit(){
 function civils(){
   return population - infantryman.countUnits;
 }
-function defaultBuldingCost() {
+export function defaultBuldingCost() {
   return 100;
 }
-function researchCostMoney(){
-  return 500 + totalBuildingsCells() * 10;
+export function researchCostMoney(){
+ return 500 + totalBuildingsCells() * 10;
 }
-function researchCostSolders(){
-  return 2 + totalBuildingsCells();
-}
-function freeCells() {
+export function freeCells() {
   return constructionCells - totalBuildings();
 }
 function totalBuildings() {
   return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings + house.countBuildings;
 }
-function totalBuildingsCells() {
+export function totalBuildingsCells() {
   return farm.countBuildings + bank.countBuildings + barn.countBuildings + barracks.countBuildings + house.countBuildings + wasteland.countBuildings;
 }
 function jobless(){
@@ -146,11 +169,6 @@ function balanceAccrual(){
 
   livingPlaces = livingPlaces + sumLivingPlaces();
 
-  balanceFood = Math.floor(farm.income() + (wasteland.income()) - population);
-  foodLimit = farm.income() + initialFoodLimit();
-
-  if ((food.sumFood() + balanceFood) > foodLimit)
-    balanceFood = foodLimit - food.sumFood();
   balancePopulation = Math.floor(population * populationGrowth);
   if(food.sumFood() == 0){
     balancePopulation = 0;
@@ -169,7 +187,18 @@ function balanceAccrual(){
   if (food.sumFood() + balanceFood == population + balancePopulation)
     balanceFood = food.sumFood() * (-1);
 }
-function foodConsumption() {
+function balanceFood(){
+  //Нужно запомнить сколько ресурса есть, прибавить еду food.allIncome(), отнять потребление foodConsumption()
+  //Затем посчитать разницу между запомненым количеством еды и тем, что получилось после всех действий
+  let result =  Math.floor(food.allIncome() - population);
+  if ((food.sumFood() + result) > food.limit())
+    result = food.limit() - food.sumFood();
+
+  return result;
+}
+
+function foodConsumption() {  //Потребление еды.
+  //Вычитаем по формуле популяцию из еды на складе
   //Считаю потребление еды с учетом разбиения ее на отдельные ресурсы (мясо, зерно и пр.)
   /*Смотрим сколько ресурсов больше 0.
   Делим население на число ресурсов - столько и есть норма потребления для каждого ресурса.
@@ -194,7 +223,7 @@ function foodConsumption() {
 }//Проблема вот в чем: если у нас осталось 2 голодных и 3 ресурса. Каков будет результат работы функции?
 
 
-function buildEfficiency(){
+export function buildEfficiency(){
   let td;
   let result;
   td = document.getElementById("buildEfficiency");
@@ -217,7 +246,13 @@ function sumWorkplaces(){
 function sumLivingPlaces(){
   return farm.totalLivingPlaces() + bank.totalLivingPlaces() + barn.totalLivingPlaces() + barracks.totalLivingPlaces() + house.totalLivingPlaces() + wasteland.totalLivingPlaces();
 }
-function updateStat(){
+
+//Функцию разносим на разные. Для начала на 2. Те места, которые нужно вынести пометил комментами
+//Чтобы понять, какую функцию вызывать на какой странице, разношу все функции по разных js файлам
+//И для каждой страницы создаю свой js файл, импортируя туда нужные функции
+
+//Таблица с общей статистикой вверху каждой страницы
+export function updateTopStat(){
   let td;
   balanceAccrual();
     td = document.getElementById("population");
@@ -231,7 +266,7 @@ function updateStat(){
     }
 
     td = document.getElementById('money');
-    td.innerHTML = money;
+    td.innerHTML = resources.money;
     if(balanceMoney >= 0){
       td.innerHTML +=  ' + ';
       td.innerHTML += balanceMoney;
@@ -242,13 +277,12 @@ function updateStat(){
 
     td = document.getElementById('food');
     td.innerHTML = food.sumFood();
-    console.log(food.sumFood());
-    if(balanceFood >= 0){
+    if(balanceFood() >= 0){
       td.innerHTML += ' + ';
-      td.innerHTML += Math.floor(balanceFood);
+      td.innerHTML += balanceFood();
     }
     else {
-      td.innerHTML += Math.floor(balanceFood);
+      td.innerHTML += balanceFood();
     }
 
     td = document.getElementById('livingPlaces');
@@ -263,9 +297,6 @@ function updateStat(){
     td = document.getElementById('constructionCell');
     td.innerHTML = constructionCells;
 
-    td = document.getElementById('freeCells');
-    td.innerHTML = wasteland.countBuildings;
-
     td = document.getElementById('workplaces');
     td.innerHTML = sumWorkplaces();
 
@@ -274,45 +305,17 @@ function updateStat(){
 
     td = document.getElementById('buildEfficiency');
     td.innerHTML = buildEfficiency();
-
-    td = document.getElementById('farm');
-    td.innerHTML = farm.countBuildings;
-
-    td = document.getElementById('bank');
-    td.innerHTML = bank.countBuildings;
-
-    td = document.getElementById('barn');
-    td.innerHTML = barn.countBuildings;
-
-    td = document.getElementById('barracks');
-    td.innerHTML = barracks.countBuildings;
-
-    td = document.getElementById('house');
-    td.innerHTML = house.countBuildings;
-
-    td = document.getElementById('countWarriors');
-    td.innerHTML = infantryman.countUnits;
-
-    //Доступные солдаты, постройки и пустыри
-    td = document.getElementById('SoldiersAvailable');
-    td.innerHTML = Math.floor(Math.min(barracks.income(), (money/infantryman.costHiring)));
-
-    td = document.getElementById('WastelandAvailable');
-    td.innerHTML = Math.floor(Math.min((money/researchCostMoney()),(infantryman.countUnits/researchCostSolders())));
-
-    td = document.getElementById('BuildingAvailable');
-    td.innerHTML = Math.floor(Math.min(money/defaultBuldingCost(), wasteland.countBuildings));
-
 }
+
 function nextTurn() {
   //вычисляю баланс ресурсов
-  money += Math.floor(balanceMoney);
+  resources.money += Math.floor(balanceMoney);
   //food += balanceFood;
   population += balancePopulation;
 
   if(food < 0){
     population += food;
-    food.sumFood() = 0;
+    //food.sumFood() = 0; Ошибка! к функции нельзя присвоить значение.
   }
   wasteland.countBuildings += researchingCells;
   constructionCells += researchingCells;
@@ -324,118 +327,8 @@ function nextTurn() {
 
   currentTurn ++;
   countSoldersStatTurn = infantryman.countUnits;
-  updateStat();
-}
-
-function research(countBuildings){
-  console.log(researchCostMoney());
-  console.log(researchCostSolders());
-  while(countBuildings >= 1){
-    if(money >= researchCostMoney()){
-      if (infantryman.countUnits >= researchCostSolders()){
-        money -= researchCostMoney();
-        infantryman.countUnits -= researchCostSolders();
-        researchingCells++;
-        countBuildings--;
-      }
-      else{
-        alert("Недостаточно солдат на исследование");
-        break;
-      }
-    }
-    else{
-      alert("Недостаточно денег на исследование");
-      break;
-    }
-  }
-  if (researchingCells > 0){
-    alert("Исследовано " + researchingCells  + " ячеек");
-  }
-  updateStat();
-}
-
-function  building(build){
-  console.log(build);
-  countBuildings = build.value;
-  buildName = build.name;
-  if (buildName == "wasteland"){
-    research(countBuildings);
-    return;
-  }
-  if (countBuildings < 1){
-    alert("Нужно возвести хотя бы одну постройку");
-    return;
-  }
-  if (money >= 100){
-    let input = document.getElementById(buildName).value;
-    let countBuildings = Number(build.value);
-    if (countBuildings >= 1){
-        while(money >= 100 && countBuildings >= 1){
-          if (freeCells() >= 1){
-            eval(buildName).countBuildings++;
-            countBuildings--;
-            wasteland.countBuildings--;
-            money -= 100;
-          }
-          else{
-            alert("Все ячейки строительства заняты");
-            break;
-          }
-        }
-    }
-    if (money==0 && Building > 0){
-      alert("Вы хотите возвести больше построек, чем можете себе позволить. Постройки возведены на все ваши деньги");
-    }
-    updateStat();
-  }
-  else{
-    alert("Недостаточно денег для постройки");
-  }
-}
-function demolition(build) {
-  console.log(build);
-  let countBuildings = Number(build.value);
-  buildName = build.name;
-  if (countBuildings < 1){
-    alert("Невозможно снести меньше одной постройки");
-    return;
-  }
-  let input = document.getElementById(buildName).value;
-  while(countBuildings >= 1 && eval(buildName).countBuildings >= 1){
-    eval(buildName).countBuildings--;
-    countBuildings --;
-    wasteland.countBuildings++;
-  }
-  updateStat();
-}
-
-
-function recruitment(recruit){
-  console.log(recruit);
-  countRecruits = Number(recruit.value);
-  recruitName = recruit.name;
-  if (countRecruits <= barracks.income()){
-    //Костыль, предотвращающий найм большего числа юнитов, чем могут позволить казармы
-    //путем найма несколько раз за один ход небольшго числа солдат
-    if(eval(recruitName).countUnits + countRecruits <= countSoldersStatTurn + barracks.income()){
-      if (money >= (countRecruits * eval(recruitName).costHiring)){
-        eval(recruitName).countUnits += countRecruits;
-        money -= countRecruits * infantryman.costHiring;
-        console.log(eval(recruitName).countUnits);
-        updateStat();
-      }
-      else{
-        alert("Вы хотите обучить больше воинов, чем может позволить ваш бюджет");
-      }
-    }
-    else {
-      alert("Вы хотите обучить больше юнитов, чем это могут сделать казармы");
-    }
-  }
-  else {
-    alert("Вы хотите обучить больше юнитов, чем это могут сделать казармы");
-  }
+  updateTopStat();
 }
 window.onload = function() {
-  updateStat();
+  updateTopStat();
 }

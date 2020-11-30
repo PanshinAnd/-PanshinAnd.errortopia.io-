@@ -1,3 +1,12 @@
+table{
+  text-align: center;
+}
+td {
+  border: 1px solid;
+  border-color: black;
+  padding: 2px;
+  padding-top: 5px;
+}
 .strict {
   border: 10px;
   border-color: red;
@@ -35,7 +44,7 @@
   margin-top: 1em;
   margin-left: 8em;
   float: left;
-  width: 40%
+  width:50%
 }
 .rightColumn{
   display: flex;
@@ -46,7 +55,7 @@
   margin-top:1em;
   margin-right: 5em;
   float:right;
-  width:40%
+  width:30%
 }
 .item{
   display: flex;
@@ -79,12 +88,12 @@
   height: 142px;
 }
 .form{
-  max-width: 120px;
+  max-width: 60px;
   max-height: 34px;
 }
 .submit {
   height: 34px;
-  width: 140px;
+  width: 120px;
 }
 .turn {
   margin-top: 50px;
